@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next gemini" lang="ko">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-icon-180x180.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png?v=7.0.1">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="react의 대표적인 상태관리 도구인 redux는 해야할 게 너무 많습니다. redux로 카운터를 만들 때를 상상해 보죠.  redux로 Counter 만들기먼저 액션에 따라 카운터 숫자를 바꾸는 reducer를 작성하고 store를 생성합니다.  123456789101112const counterReducer = (state = &amp;#123;count: 0">
+<meta name="keywords" content="react,state,hook,redux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="글로벌 상태관리를 심플하게, use-simple-store!">
+<meta property="og:url" content="http://yoursite.com/posts/글로벌 상태관리를 심플하게, use-simple-store!/index.html">
+<meta property="og:site_name" content="Cross Code">
+<meta property="og:description" content="react의 대표적인 상태관리 도구인 redux는 해야할 게 너무 많습니다. redux로 카운터를 만들 때를 상상해 보죠.  redux로 Counter 만들기먼저 액션에 따라 카운터 숫자를 바꾸는 reducer를 작성하고 store를 생성합니다.  123456789101112const counterReducer = (state = &amp;#123;count: 0">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://github.com/skt-t1-byungi.png">
+<meta property="og:updated_time" content="2019-05-15T14:27:51.084Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="글로벌 상태관리를 심플하게, use-simple-store!">
+<meta name="twitter:description" content="react의 대표적인 상태관리 도구인 redux는 해야할 게 너무 많습니다. redux로 카운터를 만들 때를 상상해 보죠.  redux로 Counter 만들기먼저 액션에 따라 카운터 숫자를 바꾸는 reducer를 작성하고 store를 생성합니다.  123456789101112const counterReducer = (state = &amp;#123;count: 0">
+<meta name="twitter:image" content="https://github.com/skt-t1-byungi.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/글로벌 상태관리를 심플하게, use-simple-store!/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>글로벌 상태관리를 심플하게, use-simple-store! | Cross Code</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ko">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cross Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">기술 블로그</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>홈</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">4</span></a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/글로벌 상태관리를 심플하게, use-simple-store!/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cross-code">
+      <meta itemprop="description" content="프론트엔드 개발을 좋아하는 사람들의 공동 블로그">
+      <meta itemprop="image" content="/images/logo/favicon-96x96.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cross Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">글로벌 상태관리를 심플하게, use-simple-store!
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">작성일</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2019-05-16 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-16T00:00:00+09:00">2019-05-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2019-05-15 23:27:51" itemprop="dateModified" datetime="2019-05-15T23:27:51+09:00">2019-05-15</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>react</code>의 대표적인 상태관리 도구인 <code>redux</code>는 <strong>해야할 게 너무 많습니다.</strong> redux로 카운터를 만들 때를 상상해 보죠. </p>
+<h2 id="redux로-Counter-만들기"><a href="#redux로-Counter-만들기" class="headerlink" title="redux로 Counter 만들기"></a><code>redux</code>로 Counter 만들기</h2><p>먼저 액션에 따라 카운터 숫자를 바꾸는 <code>reducer</code>를 작성하고 <code>store</code>를 생성합니다. </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counterReducer = <span class="function">(<span class="params">state = &#123;count: <span class="number">0</span>&#125;, action</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'INCREMENT'</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;...state, <span class="attr">count</span>: state.count + <span class="number">1</span>&#125;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'DECREMENT'</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;...state, <span class="attr">count</span>: state.count - <span class="number">1</span>&#125;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> store = createStore(counterReducer)</span><br></pre></td></tr></table></figure>
+<p>생성한 store를 아래와 같이 <code>&lt;App/&gt;</code>을 감싼 <code>Provider</code>에 인자로 넘깁니다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span></span><br><span class="line"><span class="keyword">import</span> &#123; store &#125; <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line"></span><br><span class="line">render(</span><br><span class="line">    &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">        &lt;App /&gt;</span><br><span class="line">    &lt;<span class="regexp">/Provider&gt;,</span></span><br><span class="line"><span class="regexp">    document.getElementById('root')</span></span><br><span class="line"><span class="regexp">)</span></span><br></pre></td></tr></table></figure>
+<p>리듀서로 전달될 <code>action</code>을 생성하는 함수를 작성합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> increment = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">type</span> : <span class="string">'INCREMENT'</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> decrement = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="attr">type</span> : <span class="string">'DECREMENT'</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이제 리액트 컴포넌트에 스토어의 상태를 props로 전달하기 위한 <code>mapStateToProps</code>, 그리고 액션을 <code>dispatch</code>하기 위한 <code>mapDispatchToProps</code>를 만들어 컴포넌트와 <code>connect</code>합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">count</span>: state.count &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        increment: <span class="function"><span class="params">()</span> =&gt;</span> dispatch(increment()), <span class="comment">// 👈 아까 만들어둔 액션 생성함수를 사용합니다.</span></span><br><span class="line">        decrement: <span class="function"><span class="params">()</span> =&gt;</span> dispatch(decrement())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps, mapDispatchToProps)(Counter)</span><br></pre></td></tr></table></figure>
+<p>그럼 끝? 아니, 아직 안끝났을 수 있습니다.</p>
+<p>지금은 액션타입을 문자열 그대로 작성했지만 상수로 분리해 관리하기도 합니다. 또 리덕스 커뮤니티는 리덕스와 리액트 컴포넌트 사이에 <code>Container component</code>라고 불리는 중간 레이어를 두는 것을 권장합니다. 위에서 connect한 Counter는 다시 <code>CounterContainer</code>와 <code>Counter</code>로 분리될 수 있을 겁니다.</p>
+<p>컴포넌트가 많아질수록 이런 작업들은 정말 피곤합니다. 만약 타입스크립트라도 사용한다면… 😱</p>
+<p>이것들을 정말 줄일 수는 없을까요?</p>
+<h1 id="use-simple-store-🏬"><a href="#use-simple-store-🏬" class="headerlink" title="use-simple-store 🏬"></a>use-simple-store 🏬</h1><p><a href="https://github.com/skt-t1-byungi/use-simple-store" target="_blank" rel="noopener">use-simple-store</a>는 이런 리덕스 장황한 작업들을 피하고, 보다 심플하게 리액트에서 글로벌 상태를 관리하기 위한 라이브러리입니다. 이번엔 use-simple-store를 사용해 카운터를 만들어 보면서 리덕스와 어떤 차이가 있는지 살펴봅시다.</p>
+<h2 id="use-simple-store로-Counter-만들기"><a href="#use-simple-store로-Counter-만들기" class="headerlink" title="use-simple-store로 Counter 만들기"></a><code>use-simple-store</code>로 Counter 만들기</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> createStore <span class="keyword">from</span> <span class="string">'use-simple-store'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123;useStore, update&#125; = createStore(&#123;<span class="attr">count</span>: <span class="number">0</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> increment = <span class="function"><span class="params">()</span> =&gt;</span> update(<span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">    state.count = state.count + <span class="number">1</span></span><br><span class="line">&#125;)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> decrement = <span class="function"><span class="params">()</span> =&gt;</span> update(<span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">    state.count = state.count - <span class="number">1</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>초기 상태값으로 즉시 store를 생성합니다. store에는 <code>useStore</code>와 <code>update</code> 함수가 있습니다. <code>update</code>함수를 사용해 카운터 숫자를 변경할 수 있습니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;count&#125; = useStore()</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;span&gt;&#123;count&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">            &lt;button onClick=&#123;decrement&#125;&gt; - &lt;/</span>button&gt;</span><br><span class="line">            &lt;button onClick=&#123;increment&#125;&gt; + &lt;/button&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;))</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><code>Provider</code>로 <code>&lt;App/&gt;</code>을 감싸거나 컴포넌트와 <code>connect</code>하는 과정이 없습니다. 리액트 16.8 부터 사용할 수 있는 <code>hook</code>을 사용해 스토어 상태를 즉시 컴포넌트로 가져옵니다.</p>
+<p>끝? 네 이게 전부입니다.</p>
+<h2 id="What"><a href="#What" class="headerlink" title="What?"></a>What?</h2><p>use-simple-store는 리덕스와 달리 상태변경을 처리하는 프로세스를 액션, 리듀서로 분리하지 않습니다. 상태를 직접 변경하는 <code>mutate</code>함수를 <code>update(mutate)</code> 인자로 넘기면 됩니다. 리덕스에서 요구되던 아래 과정들을 하나로 통합할 수 있습니다.</p>
+<ol>
+<li>리듀서 작성</li>
+<li>액션생성자 정의</li>
+<li>액션 타입을 상수로 분리해서 별도로 관리</li>
+<li>mapDispatchToProps</li>
+</ol>
+<p>또 컴포넌트에 hook으로 스토어 상태를 즉시 가져옵니다. 아래 내용을 생략할 수 있습니다.</p>
+<ol>
+<li>Provider로 <code>&lt;App/&gt;</code>을 감싸는 것.</li>
+<li>mapStateToProps, mapDispatchToProps를 컴포넌트와 <code>connect</code></li>
+</ol>
+<h2 id="다른-특징"><a href="#다른-특징" class="headerlink" title="다른 특징"></a>다른 특징</h2><h3 id="더-나은-상태변경-코드"><a href="#더-나은-상태변경-코드" class="headerlink" title="더 나은 상태변경 코드"></a>더 나은 상태변경 코드</h3><p>만약 객체 깊은(nested) 값을 변경해야한다면, 리덕스는 불변성(immutable)을 위해 객체확산(object spread) 연산자를 남발합니다.<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> reducer = <span class="function">(<span class="params">state = INITIAL_STATE, action</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'ADD_USER'</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;</span><br><span class="line">                ...state, </span><br><span class="line">                team: &#123;</span><br><span class="line">                    ...state.team,</span><br><span class="line">                    users: [</span><br><span class="line">                        ...state.team.users, </span><br><span class="line">                        action.newUser</span><br><span class="line">                    ]</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">        <span class="keyword">default</span>: <span class="keyword">return</span> state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>반면 use-simple-store는 state를 직접 바꿀수 있어서 보다 깔끔한 코드를 작성할 수 있습니다. (내부적으로 immutable 라이브러리인 <a href="https://github.com/immerjs/immer" target="_blank" rel="noopener">immer</a>을 사용합니다.)<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> addUser = <span class="function"><span class="params">newUser</span> =&gt;</span> update(<span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">    state.team.users.push(user)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="비동기-액션"><a href="#비동기-액션" class="headerlink" title="비동기 액션"></a>비동기 액션</h3><p>update함수는 promise나 비동기함수(async function)을 직접 지원하지 않습니다. 대신 아래와 같이 작성할 수 있습니다.<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">fetchTodos</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    update(<span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">        state.fetching = <span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> todos = <span class="keyword">await</span> fetchTodosAsync()</span><br><span class="line"></span><br><span class="line">    update(<span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">        state.fetching = <span class="literal">false</span></span><br><span class="line">        state.todos = todos</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Hook-useStore-selector-deps"><a href="#Hook-useStore-selector-deps" class="headerlink" title="Hook - useStore([selector[, deps]])"></a>Hook - <code>useStore([selector[, deps]])</code></h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> counter = useStore(<span class="function"><span class="params">state</span> =&gt;</span> state.counter)</span><br></pre></td></tr></table></figure>
+<p><code>useStore(selector)</code>에 <code>selector</code>함수를 인자로 넘겨 <code>mapStateToProps</code> 처럼 원하는 값만 고를 수 있습니다.<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> value = useStore(<span class="function"><span class="params">state</span> =&gt;</span> state[condition ? <span class="string">'v1'</span> : <span class="string">'v2'</span>], [condition])</span><br></pre></td></tr></table></figure></p>
+<p>selector 함수가 외부 변수에 의존한다면, 다른 리액트 훅처럼 <code>dependencies</code>를 훅에 알려줘야 합니다.</p>
+<h2 id="Trade-off"><a href="#Trade-off" class="headerlink" title="Trade-off"></a>Trade-off</h2><p>심플함을 위해 포기한 것들이 있습니다. </p>
+<h3 id="Provider-부재"><a href="#Provider-부재" class="headerlink" title="Provider 부재"></a>Provider 부재</h3><p>use-simple-store는 <code>Context</code> API의 Provider로 <code>&lt;App/&gt;</code>을 감싸지 않습니다. 컴포넌트와 싱글톤에 가까운 스토어가 맞바로 결합합니다. 이것은 컴포넌트가 store에 강하게 종속되는 것을 의미합니다. 만약 라이브러리를 만드는 상황이라면 치명적인 단점이 될 수 있습니다. 이땐 <code>Context API</code>를 사용하세요. 저는 use-simple-store와 Context API 모두 함께 쓰고 있습니다.</p>
+<h3 id="사용자-액션과-스토어-변경이-강하게-결합합니다"><a href="#사용자-액션과-스토어-변경이-강하게-결합합니다" class="headerlink" title="사용자 액션과 스토어 변경이 강하게 결합합니다."></a>사용자 액션과 스토어 변경이 강하게 결합합니다.</h3><p>사용자의 액션과 각 스토어(또는 리듀서)의 변경은 1:1 관계가 아닐 수 있습니다. 포스트(post)에 코멘트를 작성하는 임의의 사용자 액션(<code>WRITE_COMMENT</code>)을 생각해 봅시다. 이 액션이 실행되면 포스트(post) 스토어는 <code>포스트에 달린 총 댓글 수</code>를 +1 합니다. 동시에 화면에는 내가 단 댓글 수를 표시하는 곳도 존재할 때, 내 정보(myProfile) 스토어의 <code>내가 단 댓글 수</code>도 +1 해야 합니다. <code>포스트 스토어의 포스트에 달린 총 댓글 수</code> 와 <code>내 정보 스토어의 내가 단 댓글 수</code>는 의미도 다르고 다른 스토어에 위치하지만 같은 액션(<code>WRITE_COMMENT</code>)에 반응해야 합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> postReducer = <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'WRITE_COMMENT'</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;...state, <span class="attr">commentCount</span>: state.commentCount + <span class="number">1</span>&#125;</span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">        <span class="keyword">default</span>: <span class="keyword">return</span> state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myProfileReducer = <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'WRITE_COMMENT'</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;...state, <span class="attr">commentCount</span>: state.commentCount + <span class="number">1</span>&#125;</span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">        <span class="keyword">default</span>: <span class="keyword">return</span> state</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이러한 이유로 리덕스나 더 오래된 플럭스(flux)는 사용자 액션과 스토어(리듀서)를 분리하고 스토어가 사용자 액션을 관찰가능하도록 설계해 느슨한 관계를 가지도록 하였습니다. </p>
+<p>use-simple-store는 이런 분리를 다시 통합했기 때문에, 만약 동일한 액션에 반응해야하는 2개 이상의 스토어가 있을 경우, 아래같이 명시적인 함수호출이 필요합니다.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">writeComment</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    addPostCommentCount()</span><br><span class="line">    addMyProfileCommentCount()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이런 강한 결합은 코드 유연성을 떨어뜨립니다. 스토어의 로직이 변경됐을 때, 코드수정이 스토어 뿐 아니라 여러 군데서 이뤄져야 할 수도 있습니다.</p>
+<h3 id="But…"><a href="#But…" class="headerlink" title="But…"></a>But…</h3><p>이러한 비용을 지불하는 것은 어떤 경우에 값비쌉니다. 그러나 대개는 특수하고 빈번하지 않습니다. </p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>저는 그럭저럭 만족하며 사용하고 있답니다. 😎 </p>
+<p>만약 다른 의견이나 제안이 있다면 <a href="https://github.com/skt-t1-byungi/use-simple-store/issues" target="_blank" rel="noopener">https://github.com/skt-t1-byungi/use-simple-store/issues</a>에 이슈를 남겨주세요. 답변드리겠습니다. 감사합니다.</p>
+<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p><img src="https://github.com/skt-t1-byungi.png" width="110" align="left" style="margin-right: 10px"> </p>
+<p><strong>BYUNGI</strong><br><a href="https://github.com/skt-t1-byungi" target="_blank" rel="noopener">https://github.com/skt-t1-byungi</a><br><code>write less, do more</code></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+            <a href="/tags/state/" rel="tag"># state</a>
+          
+            <a href="/tags/hook/" rel="tag"># hook</a>
+          
+            <a href="/tags/redux/" rel="tag"># redux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/웹접근성/" rel="next" title="웹접근성 (Web Accessibility)">
+                <i class="fa fa-chevron-left"></i> 웹접근성 (Web Accessibility)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            목차
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            흝어보기
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/logo/favicon-96x96.png" alt="cross-code">
+            
+              <p class="site-author-name" itemprop="name">cross-code</p>
+              <div class="site-description motion-element" itemprop="description">프론트엔드 개발을 좋아하는 사람들의 공동 블로그</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">포스트</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">태그</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redux로-Counter-만들기"><span class="nav-text">redux로 Counter 만들기</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#use-simple-store-🏬"><span class="nav-text">use-simple-store 🏬</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#use-simple-store로-Counter-만들기"><span class="nav-text">use-simple-store로 Counter 만들기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What"><span class="nav-text">What?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#다른-특징"><span class="nav-text">다른 특징</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#더-나은-상태변경-코드"><span class="nav-text">더 나은 상태변경 코드</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#비동기-액션"><span class="nav-text">비동기 액션</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hook-useStore-selector-deps"><span class="nav-text">Hook - useStore([selector[, deps]])</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trade-off"><span class="nav-text">Trade-off</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Provider-부재"><span class="nav-text">Provider 부재</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#사용자-액션과-스토어-변경이-강하게-결합합니다"><span class="nav-text">사용자 액션과 스토어 변경이 강하게 결합합니다.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#But…"><span class="nav-text">But…</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#마치며"><span class="nav-text">마치며</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#작성자"><span class="nav-text">작성자</span></a></li></ol></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cross Code Members</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
