@@ -103,7 +103,8 @@
 <meta property="og:description" content="웹접근성은 장애인뿐만 아니라 모든 사람이 정보 및 서비스를 손쉽게 활용 할 수 있도록 만드는 것 웹접근성 4가지 원칙과 관련 지침웹 접근성이란 다양한 장치 및 다양한 환경 그리고 장애를 가진 사람도 웹을 이용할 수 있도록 서비스 및 컨텐츠 제작하는 것입니다. 장애의 종류는 청각, 시각, 지체, 언어, 기억력, 지적, 발작 장애 등 매우 다양하며 중복 장애를">
 <meta property="og:locale" content="ko">
 <meta property="og:image" content="http://www.codejs.co.kr/development/views/convention/contents/img/doc/bg-principle.png">
-<meta property="og:updated_time" content="2019-04-19T13:25:01.110Z">
+<meta property="og:image" content="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4">
+<meta property="og:updated_time" content="2020-02-02T14:01:28.294Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="웹접근성 (Web Accessibility)">
 <meta name="twitter:description" content="웹접근성은 장애인뿐만 아니라 모든 사람이 정보 및 서비스를 손쉽게 활용 할 수 있도록 만드는 것 웹접근성 4가지 원칙과 관련 지침웹 접근성이란 다양한 장치 및 다양한 환경 그리고 장애를 가진 사람도 웹을 이용할 수 있도록 서비스 및 컨텐츠 제작하는 것입니다. 장애의 종류는 청각, 시각, 지체, 언어, 기억력, 지적, 발작 장애 등 매우 다양하며 중복 장애를">
@@ -245,7 +246,7 @@
       
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">8</span></a>
 
   </li>
 
@@ -357,7 +358,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Updated at: 2019-04-19 22:25:01" itemprop="dateModified" datetime="2019-04-19T22:25:01+09:00">2019-04-19</time>
+                <time title="Updated at: 2020-02-02 23:01:28" itemprop="dateModified" datetime="2020-02-02T23:01:28+09:00">2020-02-02</time>
               
             
           </span>
@@ -502,7 +503,8 @@
 <li><a href="http://www.wah.or.kr/" target="_blank" rel="noopener">웹 접근성 연구소</a></li>
 <li><a href="https://nuli.navercorp.com/sharing/blog/post/1081603" target="_blank" rel="noopener">웹 개발자를 위한 센스리더 가이드</a></li>
 </ul>
-<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p>codeJS 🐘 </p>
+<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p><img src="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4" width="100" align="left" style="margin-right: 10px"></p>
+<p><strong>codeJS 🐘</strong><br><a href="https://github.com/dodortus" target="_blank" rel="noopener">https://github.com/dodortus</a><br><code>simple is best</code></p>
 
       
     </div>
@@ -576,6 +578,13 @@
           
 
   
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
 
 
 
@@ -624,7 +633,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">포스트</span>
                   </a>
                 </div>
@@ -655,7 +664,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">태그</span>
                   
                 </div>
@@ -714,7 +729,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>
@@ -844,6 +859,45 @@
   
 
   
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/posts/웹접근성/";
+    this.page.identifier = "posts/웹접근성/";
+    this.page.title = '웹접근성 (Web Accessibility)';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://cross-code.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    $(function() {
+      var offsetTop = $('#comments').offset().top - $(window).height();
+      if (offsetTop <= 0) {
+        // load directly when there's no a scrollbar
+        loadComments();
+      } else {
+        $(window).on('scroll.disqus_scroll', function() {
+          // offsetTop may changes because of manually resizing browser window or lazy loading images.
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          var scrollTop = $(window).scrollTop();
+
+          // pre-load comments a bit? (margin or anything else)
+          if (offsetTop - scrollTop < 60) {
+            $(window).off('.disqus_scroll');
+            loadComments();
+          }
+        });
+      }
+    });
+  
+</script>
+
+
+
 
 
   
