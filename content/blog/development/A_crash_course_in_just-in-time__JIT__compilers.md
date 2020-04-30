@@ -2,7 +2,12 @@
 title: 'A crash course in just-in-time (JIT) compilers'
 date: 2019-2-6 16:21:13
 category: 'development'
+thumbnail: './images/hello.png'
 draft: false
+author: 'test'
+github: 'https://google.com'
+profileImage: 'https://google.com'
+introduction: 'hello world'
 ---
 
 [A crash course in just-in-time (JIT) compilers - Mozilla Hacks - the Web developer blog](https://hacks.mozilla.org/2017/02/a-crash-course-in-just-in-time-jit-compilers/)

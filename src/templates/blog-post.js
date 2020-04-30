@@ -9,10 +9,11 @@ import { PostDate } from '../components/post-date'
 import { PostContainer } from '../components/post-container'
 import { SocialShare } from '../components/social-share'
 import { SponsorButton } from '../components/sponsor-button'
-import { Bio } from '../components/bio'
+// import { Bio } from '../components/bio'
 import { PostNavigator } from '../components/post-navigator'
 import { Disqus } from '../components/disqus'
 import { Utterences } from '../components/utterances'
+import { AuthorBio } from '../components/author-bio'
 import * as ScrollManager from '../utils/scroll'
 
 import '../styles/code.scss'
@@ -26,9 +27,20 @@ export default ({ data, pageContext, location }) => {
 
   const post = data.markdownRemark
   const metaData = data.site.siteMetadata
-  const { title, comment, siteUrl, author, sponsor } = metaData
+  console.log('data : ', data)
+  console.log('pageContext : ', pageContext)
+  // const { title, comment, siteUrl, author, sponsor } = metaData
+  const { title, comment, siteUrl, sponsor } = metaData
   const { disqusShortName, utterances } = comment
-  const { title: postTitle, date, thumbnail } = post.frontmatter
+  const {
+    title: postTitle,
+    date,
+    thumbnail,
+    author,
+    github,
+    profileImage,
+    introduction,
+  } = post.frontmatter
   const thumbnailSrc = thumbnail
     ? `${siteUrl}${thumbnail.childImageSharp.fixed.src}`
     : undefined
@@ -48,7 +60,13 @@ export default ({ data, pageContext, location }) => {
         <SponsorButton sponsorId={sponsor.buyMeACoffeeId} />
       )}
       <Elements.Hr />
-      <Bio />
+      {/* <Bio /> */}
+      <AuthorBio
+        author={author}
+        github={github}
+        profileImage={profileImage}
+        introduction={introduction}
+      />
       <PostNavigator pageContext={pageContext} />
       {!!disqusShortName && (
         <Disqus
@@ -93,6 +111,10 @@ export const pageQuery = graphql`
             }
           }
         }
+        github
+        introduction
+        profileImage
+        author
       }
     }
   }

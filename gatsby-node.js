@@ -22,6 +22,11 @@ exports.createPages = ({ graphql, actions }) => {
                 title
                 category
                 draft
+
+                author
+                profileImage
+                introduction
+                github
               }
             }
           }
