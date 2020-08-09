@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next gemini" lang="ko">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-icon-180x180.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png?v=7.0.1">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="본능에 의해 코딩하는 것을 멈추라  최근 켄트벡의 구현패턴을 읽고 가장 뜨금 했던 문구입니다. 완성을 목표로만 달려왔던 저는 정말 큰 충격이었습니다. 그래서 이와 관련된 내용을 찾아보고 한번 정리를 해봤습니다.일단, 좋은 프로그래머가 되려면 “돌아가기만 하면 되지” 라는 마인드를 가지면 안 됩니다. 타인과의 커뮤니케이션을 중시하고 코드의 과도한 복잡성을">
+<meta name="keywords" content="프론트엔드, frontend, javascript, html, css">
+<meta property="og:type" content="article">
+<meta property="og:title" content="바람직한 프로그래머 되기">
+<meta property="og:url" content="http://yoursite.com/posts/바람직한-프로그래머-되기/index.html">
+<meta property="og:site_name" content="Cross Code">
+<meta property="og:description" content="본능에 의해 코딩하는 것을 멈추라  최근 켄트벡의 구현패턴을 읽고 가장 뜨금 했던 문구입니다. 완성을 목표로만 달려왔던 저는 정말 큰 충격이었습니다. 그래서 이와 관련된 내용을 찾아보고 한번 정리를 해봤습니다.일단, 좋은 프로그래머가 되려면 “돌아가기만 하면 되지” 라는 마인드를 가지면 안 됩니다. 타인과의 커뮤니케이션을 중시하고 코드의 과도한 복잡성을">
+<meta property="og:locale" content="ko">
+<meta property="og:updated_time" content="2020-08-05T01:15:32.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="바람직한 프로그래머 되기">
+<meta name="twitter:description" content="본능에 의해 코딩하는 것을 멈추라  최근 켄트벡의 구현패턴을 읽고 가장 뜨금 했던 문구입니다. 완성을 목표로만 달려왔던 저는 정말 큰 충격이었습니다. 그래서 이와 관련된 내용을 찾아보고 한번 정리를 해봤습니다.일단, 좋은 프로그래머가 되려면 “돌아가기만 하면 되지” 라는 마인드를 가지면 안 됩니다. 타인과의 커뮤니케이션을 중시하고 코드의 과도한 복잡성을">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/바람직한-프로그래머-되기/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>바람직한 프로그래머 되기 | Cross Code</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ko">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cross Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">기술 블로그</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>홈</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">10</span></a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/바람직한-프로그래머-되기/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cross-code">
+      <meta itemprop="description" content="프론트엔드 개발을 좋아하는 사람들의 공동 블로그">
+      <meta itemprop="image" content="/images/logo/favicon-96x96.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cross Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">바람직한 프로그래머 되기
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">작성일</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2019-06-23 20:19:11" itemprop="dateCreated datePublished" datetime="2019-06-23T20:19:11+09:00">2019-06-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2020-08-05 10:15:32" itemprop="dateModified" datetime="2020-08-05T10:15:32+09:00">2020-08-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>본능에 의해 코딩하는 것을 멈추라</p>
+</blockquote>
+<p>최근 켄트벡의 구현패턴을 읽고 가장 뜨금 했던 문구입니다. 완성을 목표로만 달려왔던 저는 정말 큰 충격이었습니다. 그래서 이와 관련된 내용을 찾아보고 한번 정리를 해봤습니다.<br><br>일단, 좋은 프로그래머가 되려면 <i>“돌아가기만 하면 되지”</i> 라는 마인드를 가지면 안 됩니다. 타인과의 커뮤니케이션을 중시하고 코드의 과도한 복잡성을 피하면서도 유연성 있는 코드를 작성해야 합니다. </p>
+<p>그 이유는 경제성 때문입니다. 소프트웨어 비용은 아래와 같습니다.</p>
+<p><pre>전체 비용 = 개발 비용 + 유지 비용<br>유지 비용 = 이해 비용 + 수정 비용 + 테스트 비용 + 설치 비용<br></pre><br>초기 개발 비용보다 유지 비용이 더 많이 들기 때문에 우리는 모든 프로그래머가 커뮤니케이션하기 쉬운 코드를 짜서 유지 비용을 줄이려고 노력해야 합니다.</p>
+<p>그런데 여기서 중요한 것은 아무리 좋은 코드가 남겨져 있어도 이해를 못 해서도 안됩니다. 상대방 코드의 해석과 의도를 이해하지 못한다면 오히려 버그로 오해할 수도 있습니다.</p>
+<blockquote>
+<p>이해하기 쉽게 코드를 짜야 되며 우리는 그 코드를 이해할 수 있어야 합니다.</p>
+</blockquote>
+<p>이해하기 쉬우려면 일단 코드 양이 적어야 합니다. 그리고 그 코드로 개발자 간의 커뮤니케이션이 가능해야 하고 단순하면서도 유연성이 좋아야 합니다. 그러기 위해서는 몇 가지 원칙이 필요하게 되는데 ‘켄트벡의 구현패턴’에서는 아래와 같은 원칙을 알려줍니다.</p>
+<ul>
+<li>지역적 변화와 최소 중복의 원칙<ul>
+<li>코드를 수정할 때 함께 바꿔야 하는 부분을 최소화해야 한다.</li>
+<li>짧은 구문, 짧은 메소드, 작은 객체, 작은 패키지로 나누는 작업 </li>
+</ul>
+</li>
+<li>로직과 데이터의 결합<ul>
+<li>로직과 데이터를 모두 수정해야 할 경우가 많으므로, 데이터와 그 데이터를 처리하는 로직을 밀접하게 배치 한다.</li>
+</ul>
+</li>
+<li>대칭성<ul>
+<li>하나의 아이디어를 프로그램 전체에서 일관된 방식으로 표현하는 통일성이 있어야 한다.    </li>
+</ul>
+</li>
+<li>선언적 표현 <ul>
+<li>복잡한 로직이 없다면 수행되는 로직을 선언적 표현을 사용해야 한다. 선언적으로 표현을 잘 하면 예외적인 경우를 생각할 시간을 줄여줍니다.</li>
+</ul>
+</li>
+<li>변화율 <ul>
+<li>변하는 로직과 데이터를 함께 관리하고 변화율이 다른 로직과 데이터는 분리해야 한다.</li>
+</ul>
+</li>
+</ul>
+<p><br><br>처음에 이 내용을 봤을 때는 그냥 그렇구나 하고 지나쳤었는데 최근에 다시 읽었을 때는 엄청나게 중요한 내용이었다는 것을 알게 되었습니다. 혼자 작업하는 코드라고 해도 미래의 나는 지금 현재 나의 의도를 모를 수도 있습니다. 그래서 항상 의식하면서 변화율에 신경을 많이 쓰기로 했습니다. 물론 책에서 알려주는 내용이 완벽한 정답이라고 할 수는 없지만 저는 경험을 통해서 책에서 제시한 내용에 완전히 공감하게 되었습니다. 그래서 이와 관련된 내용을 좀 더 찾아봐야겠다는 생각이 들었고 <a href="https://hyunseob.github.io/2016/02/21/how-to-become-a-great-frontend-engineer/" target="_blank" rel="noopener">탁월한 프론트엔드 엔지니어가 되는 법</a>과 <a href="https://medium.com/@erwinousy/%EC%A2%8B%EC%9D%80-%EC%BD%94%EB%94%A9%EC%9D%84-%EC%9C%84%ED%95%9C-13%EA%B0%80%EC%A7%80-%EA%B7%9C%EC%B9%99-hackernoon-%EA%B8%80%EB%93%A4-%EC%A4%91-%EC%9D%BC%EB%B6%80-%EB%B2%88%EC%97%AD-3ff7d119e926" target="_blank" rel="noopener">좋은 코딩을 위한 13가지 규칙</a>을 읽고 한번 정리를 해보았습니다.</p>
+<p><br><br><b>1. 문제를 해결하는데 그치지 말고 어떻게 동작하는지 파악하라.</b><br>지금 당장의 문제를 해결하려고 하지 말고 문제의 원인을 이해하고 근본적인 문제를 찾아 해결을 해야합니다. 그렇게 하지 않는다면 그와 관련된 같은 문제를 또 마주하게 될 수도 있습니다.</p>
+<p><b>2. 명세(Spec)와 코드를 읽어라.</b><br>저의 경우 어떤 라이브러리를 사용했을 때 사용법과 Example 만 보고 <i>“잘 되네?”</i> 하고 넘겼습니다. 하지만 명세를 보면서 이해하고 스스로 능력을 기르고 해당 기술이 어떻게 동작할 수 있는지 생각하게 되면 그 기술의 주류이거나 심지어는 해당 기술의 발전에 기여할 수도 있습니다.</p>
+<p><b>3. 있는 걸 다시 만들고 배운 것들을 기록해라.</b><br>위의 내용들을 실천하기 가장 좋은 방법은 좋은 라이브러리를 내가 직접 만들어 보는 것입니다. 제가 지금 가장 중요시 생각하고 있는 부분이기도 하고 저 또한 이 글을 읽자마자 시작했습니다. 그리고 우리가 흔히 알고 있는 교과서적인 문법만이 아니라 그 라이브러리의 사상과 아이디어, 패턴 등을 배울 수 있는 아주 좋은 기회라고 생각합니다.</p>
+<p><b>4. 리펙토링 시간은 따로 주어지지 않는다.</b><br>예를 들어 <i>“이번에 테스트 용도로 이거 하나 만들어 줘~ 한 번만 사용하고 안 쓸 꺼니깐 빨리 만들어줘~”</i> 이런 말을 듣고 일단 대충 빨리 만들어서 업무를 끝마쳤을 때 6개월 뒤 <i>“저번에 만든 거 반응이 좋아서 조금만 내용 다듬어서 정식적으로 내보내야 할 것 같아.”</i> 이렇게 요청이 올 수도 있습니다. 물론 정말 한번만 쓸 수도 있지만 이런 상황이 생겼을 때 일 마무리를 잘 못 하게 되면 개발자의 책임이 생기게 됩니다. 그래서 일단 최소한의 시간 확보가 먼저입니다. 그리고 한 번만 사용한다고 하더라도 품질에 신경을 많이 써야 합니다. 정말 한 번만 사용할 수도 있지만, 개인 역량을 위해서라도 또는 미래의 나, 동료를 위해서라도 리펙토링에 신경을 많이 써야 합니다. </p>
+<p><b>5. 최적화 vs 가독성.</b><br>데이터를 가공하는 로직에서 데이터를 find 하는 함수와 filter 를 하는 함수를 사용하는 코드를 보고 “그냥 for 문 하나로 처리하면 성능이 더 좋지 않을까?” 라는 생각을 할 수도 있습니다. 하지만 앞에서도 여러 번 이야기했던 것처럼 읽기 쉬운 코드가 우선입니다. 그 이유는 최적화시키는 것보다 코드를 읽는 시간과 자원이 더 많이 들기 때문입니다.<br><br></p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a href="http://www.acornpub.co.kr/book/kentpattern" target="_blank" rel="noopener">켄트백의 구현패턴</a></li>
+<li><a href="https://hyunseob.github.io/2016/02/21/how-to-become-a-great-frontend-engineer/" target="_blank" rel="noopener">탁월한 프론트엔드 엔지니어가 되는 법</a></li>
+<li><a href="https://medium.com/@erwinousy/%EC%A2%8B%EC%9D%80-%EC%BD%94%EB%94%A9%EC%9D%84-%EC%9C%84%ED%95%9C-13%EA%B0%80%EC%A7%80-%EA%B7%9C%EC%B9%99-hackernoon-%EA%B8%80%EB%93%A4-%EC%A4%91-%EC%9D%BC%EB%B6%80-%EB%B2%88%EC%97%AD-3ff7d119e926" target="_blank" rel="noopener">좋은 코딩을 위한 13가지 규칙</a><br><br></li>
+</ul>
+<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p><a href="https://goldenthumb.net/" target="_blank" rel="noopener">goldenthumb</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/글로벌 상태관리를 심플하게, use-simple-store!/" rel="next" title="글로벌 상태관리를 심플하게, use-simple-store!">
+                <i class="fa fa-chevron-left"></i> 글로벌 상태관리를 심플하게, use-simple-store!
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/WebRTC/" rel="prev" title="WebRTC (Web Real-Time Communication) 소개">
+                WebRTC (Web Real-Time Communication) 소개 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            목차
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            흝어보기
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/logo/favicon-96x96.png" alt="cross-code">
+            
+              <p class="site-author-name" itemprop="name">cross-code</p>
+              <div class="site-description motion-element" itemprop="description">프론트엔드 개발을 좋아하는 사람들의 공동 블로그</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">포스트</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">태그</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#참고"><span class="nav-text">참고</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#작성자"><span class="nav-text">작성자</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cross Code Members</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/posts/바람직한-프로그래머-되기/";
+    this.page.identifier = "posts/바람직한-프로그래머-되기/";
+    this.page.title = '바람직한 프로그래머 되기';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://cross-code.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    $(function() {
+      var offsetTop = $('#comments').offset().top - $(window).height();
+      if (offsetTop <= 0) {
+        // load directly when there's no a scrollbar
+        loadComments();
+      } else {
+        $(window).on('scroll.disqus_scroll', function() {
+          // offsetTop may changes because of manually resizing browser window or lazy loading images.
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          var scrollTop = $(window).scrollTop();
+
+          // pre-load comments a bit? (margin or anything else)
+          if (offsetTop - scrollTop < 60) {
+            $(window).off('.disqus_scroll');
+            loadComments();
+          }
+        });
+      }
+    });
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

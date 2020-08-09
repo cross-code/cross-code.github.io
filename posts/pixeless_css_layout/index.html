@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next gemini" lang="ko">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-icon-180x180.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png?v=7.0.1">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="이 글은 픽셀 없는(pixeless) CSS 레이아웃을 제시하고 그것을 달성하기 위한 기술적인 방법을 소개합니다.  왜 픽셀(px)을 없애야 할까?더 이상 사용자들은 똑같은 해상도를 가진 모니터로 웹사이트를 접속하지 않습니다. 모바일, 태블릿등 다양한 기기로 웹사이트를 이용하며 그것들의 화면크기는 제각각입니다. 예전에는 특정 기기의 화면크기에 맞춰 모바일">
+<meta name="keywords" content="css,layout">
+<meta property="og:type" content="article">
+<meta property="og:title" content="픽셀 없는(pixeless) CSS 레이아웃">
+<meta property="og:url" content="http://yoursite.com/posts/pixeless_css_layout/index.html">
+<meta property="og:site_name" content="Cross Code">
+<meta property="og:description" content="이 글은 픽셀 없는(pixeless) CSS 레이아웃을 제시하고 그것을 달성하기 위한 기술적인 방법을 소개합니다.  왜 픽셀(px)을 없애야 할까?더 이상 사용자들은 똑같은 해상도를 가진 모니터로 웹사이트를 접속하지 않습니다. 모바일, 태블릿등 다양한 기기로 웹사이트를 이용하며 그것들의 화면크기는 제각각입니다. 예전에는 특정 기기의 화면크기에 맞춰 모바일">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="http://yoursite.com/posts/pixeless_css_layout/eg_web_1.png">
+<meta property="og:image" content="http://yoursite.com/posts/pixeless_css_layout/eg_content.png">
+<meta property="og:image" content="http://yoursite.com/posts/pixeless_css_layout/eg_web_2.png">
+<meta property="og:image" content="http://yoursite.com/posts/pixeless_css_layout/eg_web_3.png">
+<meta property="og:image" content="https://avatars2.githubusercontent.com/u/16894698?v=4">
+<meta property="og:updated_time" content="2020-08-05T01:15:32.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="픽셀 없는(pixeless) CSS 레이아웃">
+<meta name="twitter:description" content="이 글은 픽셀 없는(pixeless) CSS 레이아웃을 제시하고 그것을 달성하기 위한 기술적인 방법을 소개합니다.  왜 픽셀(px)을 없애야 할까?더 이상 사용자들은 똑같은 해상도를 가진 모니터로 웹사이트를 접속하지 않습니다. 모바일, 태블릿등 다양한 기기로 웹사이트를 이용하며 그것들의 화면크기는 제각각입니다. 예전에는 특정 기기의 화면크기에 맞춰 모바일">
+<meta name="twitter:image" content="http://yoursite.com/posts/pixeless_css_layout/eg_web_1.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/pixeless_css_layout/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>픽셀 없는(pixeless) CSS 레이아웃 | Cross Code</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ko">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cross Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">기술 블로그</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>홈</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">10</span></a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/pixeless_css_layout/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cross-code">
+      <meta itemprop="description" content="프론트엔드 개발을 좋아하는 사람들의 공동 블로그">
+      <meta itemprop="image" content="/images/logo/favicon-96x96.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cross Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">픽셀 없는(pixeless) CSS 레이아웃
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">작성일</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2020-01-31 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-31T00:00:00+09:00">2020-01-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2020-08-05 10:15:32" itemprop="dateModified" datetime="2020-08-05T10:15:32+09:00">2020-08-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>이 글은 <strong>픽셀 없는(pixeless) CSS 레이아웃</strong>을 제시하고 그것을 달성하기 위한 기술적인 방법을 소개합니다. </p>
+<h2 id="왜-픽셀-px-을-없애야-할까"><a href="#왜-픽셀-px-을-없애야-할까" class="headerlink" title="왜 픽셀(px)을 없애야 할까?"></a>왜 픽셀(px)을 없애야 할까?</h2><p>더 이상 사용자들은 똑같은 해상도를 가진 모니터로 웹사이트를 접속하지 않습니다. 모바일, 태블릿등 다양한 기기로 웹사이트를 이용하며 그것들의 화면크기는 제각각입니다.</p>
+<p>예전에는 특정 기기의 화면크기에 맞춰 모바일 전용 디자인을 따로 하기도 했습니다. 그러나 대응해야 되는 기기의 수가 증가하면서 디자인 트렌드는 매번 새로 하는 대신, 화면크기 변화에 유연(flexible)하게 대응하는 쪽으로 진화했습니다. </p>
+<p>유연한 디자인은 대체로 가변(fluid)적이고 화면크기에 맞춰 반응하는 특징을 지닙니다. 하지만 픽셀은 <strong>절대단위</strong>이기 때문에 픽셀을 사용한 속성은 화면크기가 바뀌었을 때 저절로 반응하지 않습니다. 개발자가 일일히 화면크기에 맞춰  변경되는 내용을 코드로 기술해야 합니다. 이런 작업은 디자이너가 화면크기에 따라 여러 벌의 디자인을 했던 것과 다르지 않습니다. 이제 개발자는 픽셀 사용 보다 화면크기에 유연하게 대응할 수 있는 <strong>상대단위</strong>(rem, em, %) 사용을 먼저 고려해야 합니다.</p>
+<h3 id="rem-활용하기"><a href="#rem-활용하기" class="headerlink" title="rem 활용하기"></a><code>rem</code> 활용하기</h3><p><code>rem</code>은 루트(html)의 글자크기를 곱해 값을 정합니다. 예를 들어 루트 글자크기가 16px이고 너비를 50rem으로 지정하면 적용되는 실제 너비는 <code>16px * 50rem = 800px</code>이 됩니다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.outer</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>;  <span class="comment">/* =&gt; 16px */</span></span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">1.25rem</span>; <span class="comment">/* =&gt; 20px */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.inner</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">0.875rem</span>;  <span class="comment">/* =&gt; 14px */</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">50rem</span>; <span class="comment">/* =&gt; 800px */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>rem을 사용하면 모든 요소에 미디어쿼리를 사용하지 않아도 됩니다. 단지 화면너비에 따라 루트의 글자크기를 바꾸는 것만으로 모든 요소의 크기를 늘리거나 줄일 수 있습니다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width:</span><span class="number">768px</span>) &#123;</span><br><span class="line">    <span class="selector-tag">html</span> &#123; <span class="attribute">font-size</span>: <span class="number">14px</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width:</span><span class="number">320px</span>) &#123;</span><br><span class="line">    <span class="selector-tag">html</span> &#123; <span class="attribute">font-size</span>: <span class="number">12px</span> &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="픽셀을-포기할-수-없는-이유"><a href="#픽셀을-포기할-수-없는-이유" class="headerlink" title="픽셀을 포기할 수 없는 이유"></a>픽셀을 포기할 수 없는 이유</h2><p>픽셀 대신 상대단위(rem, em, %)를 쓰기 어려운 이유는 곧바로 가늠되지 않기 때문입니다. 특히 디자이너와 협업이 불가피한 영역에서 이런 <em>비직관적인 단위는 의사소통을 방해</em>합니다. 하지만 이 문제는 간단하게 해결할 수 있습니다. 바로 픽셀로 기술하되 상대단위로 <strong>변환</strong>하는 방법을 통해서 말이죠.</p>
+<h3 id="scss-변환함수-활용하기"><a href="#scss-변환함수-활용하기" class="headerlink" title="scss 변환함수 활용하기"></a><code>scss</code> 변환함수 활용하기</h3><p>scss를 사용해 <code>px</code>를 <code>rem</code>으로 바꾸는 변환함수를 작성해봅시다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@function</span> rem(<span class="variable">$px</span>, <span class="variable">$base</span>: <span class="number">16px</span>) &#123;</span><br><span class="line">    <span class="keyword">@return</span> <span class="variable">$px</span> / <span class="variable">$base</span> * <span class="number">1rem</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이제 rem으로 작성했던 css를 아래 같이 픽셀로 표기된 scss코드로 바꿀 수 있습니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.outer</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: rem(<span class="number">16px</span>);</span><br><span class="line">    <span class="attribute">padding</span>: rem(<span class="number">20px</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.inner</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: rem(<span class="number">14px</span>);</span><br><span class="line">    <span class="attribute">width</span>: rem(<span class="number">800px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="컴포넌트"><a href="#컴포넌트" class="headerlink" title="컴포넌트"></a>컴포넌트</h2><p>현대 웹 프론트엔 개발의 특징 중 하나는 컴포넌트입니다. 과거 웹페이지를 html, css, js의 구성으로 정의했다면 지금은 그 중간에 컴포넌트가 존재합니다. 웹페이지를 구성하는 각각의 컴포넌트가 자신만의 html, css, js를 소유합니다. 따라서 <em>화면크기에 맞춰 반응하는 1차 단위로 엘리먼트 요소 대신, 컴포넌트를 사용</em>하는 것이 바람직합니다. 컴포넌트 단위로 화면크기에 대한 예외를 준다면 그만큼 엘리먼트 요소에 일일히 작성해야 했던 변경 내용을 많이 줄일 수 있습니다.</p>
+<h3 id="BEM-css-방법론-과-em-활용하기"><a href="#BEM-css-방법론-과-em-활용하기" class="headerlink" title="BEM(css 방법론)과 em 활용하기"></a><code>BEM</code>(css 방법론)과 <code>em</code> 활용하기</h3><p>BEM은 컴포넌트 기반의 css 방법론입니다. 여기에 <code>em</code>을 활용해 컴포넌트 단위의 반응을 실현할 수 있습니다. 먼저 rem과 마찬가지로 px를 em으로 변환하는 함수를 만듭니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@function</span> em(<span class="variable">$px</span>, <span class="variable">$base</span>: <span class="number">16px</span>) &#123;</span><br><span class="line">    <span class="keyword">@return</span> <span class="variable">$px</span> / <span class="variable">$base</span> * <span class="number">1em</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>컴포넌트 최상위(BEM에서 Block이라고 부르는) 글자크기를 <code>1rem</code>으로 합니다. 그리고 컴포넌트 내에서 사용되는 크기 단위로 <code>em</code>을 사용합니다. 결국 컴포넌트 내 모든 요소의 크기가 컴포넌트 최상위 글자크기에 대한 상대값이 되도록 합니다.</p>
+<blockquote>
+<p><code>em</code>으로 변환할 때, em의 특성을 반드시 이해하고 있어야 하는데요, <code>font-size</code>에서 em은 <em>부모 요소 font-size</em>에 대한 상대값입니다. 반면 <code>font-size가 아닌 속성</code>에서는 em은 <em>현재 요소 font-size</em>에 대한 상대값 입니다. 아래의 <code>.card__title-strong</code> 주의깊게 봐주세요. <code>.card__title</code> 안에 <code>.card__title-strong</code>가 있는 구조라고 가정하고 있습니다.</p>
+</blockquote>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.card</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>;</span><br><span class="line">    <span class="attribute">padding</span>: em(<span class="number">10px</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.card__title</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: em(<span class="number">18px</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.card__title-strong</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: em(<span class="number">24px</span>, <span class="number">18px</span>); <span class="comment">/* 👈 `.card__title`의 font-size가 base입니다. */</span></span><br><span class="line">    <span class="attribute">margin-left</span>: em(<span class="number">10px</span>, <span class="number">24px</span>); <span class="comment">/* 👈 현재 요소의 font-size가 base입니다. */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이제 아래 같이 컴포넌트에 선언한 글자크기를 바꾸는 것으로 컴포넌트 단위의 예외를 줄 수 있습니다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width:</span><span class="number">768px</span>) &#123;</span><br><span class="line">    <span class="selector-class">.card</span> &#123; <span class="attribute">font-size</span>: <span class="number">1.2rem</span>; &#125; <span class="comment">/* =&gt; 768px 이하일 때, 20% 확대 */</span> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> (<span class="attribute">max-width:</span><span class="number">480px</span>) &#123;</span><br><span class="line">    <span class="selector-class">.card</span> &#123; <span class="attribute">font-size</span>: <span class="built_in">rem</span>(<span class="number">12px</span>, <span class="number">14px</span>); &#125; </span><br><span class="line">    <span class="comment">/* =&gt; 480px 이하일 때, 12px */</span></span><br><span class="line">    <span class="comment">/* 단, 여전히 더 작은 화면너비의 루트 글자크기에 따라 변경될 수 있습니다. */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>컴포넌트 글자크기 단위로에 rem을 사용했기 때문에 루트 글자크기로 전체 크기비를 조정하는 것은 여전히 유효합니다. 만약 컴포넌트 크기로 1rem(루트 글자크기)이 아닌, 다른 크기를 사용하고 싶다면 rem함수를 이용하세요.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$card_base</span>: <span class="number">12px</span>;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.card</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: rem(<span class="variable">$card_base</span>);</span><br><span class="line">    <span class="attribute">padding</span>: em(<span class="number">10px</span>, <span class="variable">$card_base</span>); <span class="comment">/* 현재 요소의 font-size가 base입니다. */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.card__title</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: em(<span class="number">18px</span>, <span class="variable">$card_base</span>); <span class="comment">/* .card의 font-size가 base입니다. */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.card__title-strong</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: em(<span class="number">24px</span>, <span class="number">18px</span>); </span><br><span class="line">    <span class="attribute">margin-left</span>: em(<span class="number">10px</span>, <span class="number">24px</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> (max-width:<span class="number">768px</span>) &#123;</span><br><span class="line">    <span class="selector-class">.card</span> &#123; <span class="attribute">font-size</span>: rem(<span class="variable">$card_base</span> * <span class="number">1.2</span>); &#125; <span class="comment">/* =&gt; 768px 이하일 때, 20% 확대 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="기본-레이아웃-구현하기"><a href="#기본-레이아웃-구현하기" class="headerlink" title="기본 레이아웃 구현하기"></a>기본 레이아웃 구현하기</h2><p>간단한 예제를 통해 지금까지 내용을 정리합시다.</p>
+<p><img src="./eg_web_1.png" alt="web"><br>이 웹사이트는 크게 <code>menu</code>, <code>nav</code>, <code>content</code> 컴포넌트로 구성되어 있습니다. 첫번째 할 일은 전체 웹사이트의 기본 글자크기를 지정하는 것입니다. </p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>그리고 모든 컴포넌트 최상위 글자크기를 모두 <code>1rem</code>으로 합니다.</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.menu</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>; <span class="comment">/* =&gt; 16px */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.nav</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>; <span class="comment">/* =&gt; 16px */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>; <span class="comment">/* =&gt; 16px */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이제 웹페이지를 스타일링을 시작합시다. <code>content</code> 컴포넌트는 아래 이미지와 같은 스타일을 가집니다.</p>
+<p><img src="./eg_content.png" alt="web"></p>
+<p><code>content</code>는 8px 패딩이 존재하고 3개의 <code>item</code> 사이의 위아래 간격은 12px입니다. item은 6px의 패딩이 있고 글자크기는 14px입니다. scss로 이것을 스타일링하면 다음과 같습니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>;</span><br><span class="line">    <span class="attribute">padding</span>: em(<span class="number">8px</span>);</span><br><span class="line"></span><br><span class="line">    &amp;__item &#123;</span><br><span class="line">        <span class="variable">$item_base</span>: <span class="number">14px</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="attribute">font-size</span>: em(<span class="variable">$item_base</span>);</span><br><span class="line">        <span class="attribute">padding</span>: em(<span class="number">6px</span>, <span class="variable">$item_base</span>);</span><br><span class="line"></span><br><span class="line">        &amp;<span class="selector-pseudo">:not</span>(last-child) &#123;</span><br><span class="line">            <span class="attribute">margin-bottom</span>: em(<span class="number">12px</span>, <span class="variable">$item_base</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>아까 컴포넌트 최상위에 <code>1rem</code>을 주었습니다. 그래서 각 컴포넌트는 아래 그림처럼 루트 글자크기에 의해 제어됩니다.</p>
+<p><img src="./eg_web_2.png" alt="web"></p>
+<p>루트(html)의 글자크기를 화면너비에 따라 바꾸면 전체 요소의 크기비가 일괄적으로 변경됩니다. 여기서 <a href="https://include-media.com/" target="_blank" rel="noopener">include-media</a>란 scss 미디어쿼리 라이브러리를 사용하면  좀 더 심플한 반응형 코드를 작성 할 수 있습니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">html</span> &#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">16px</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">@include</span> media(<span class="string">'&gt;2048'</span>)&#123; <span class="attribute">font-size</span>: <span class="number">20px</span> &#125;</span><br><span class="line">    @include media(<span class="string">'&lt;=960px'</span>)&#123; font-size: <span class="number">14px</span> &#125;</span><br><span class="line">    @include media(<span class="string">'&lt;=480px'</span>)&#123; font-size: <span class="number">12px</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>그리고 컴포넌트 및 컴포넌트 구성요소의 스타일링 모두 <code>em</code>을 사용했는데요, 결국 컴포넌트의 구성요소는 컴포넌트 최상위 글자크기를 바라보게 됩니다.</p>
+<p><img src="./eg_web_3.png" alt="web"></p>
+<p>컴포넌트 최상위(블럭요소) 글자크기를 변경해서 컴포넌트 단위의 예외가 가능합니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.menu</span>&#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">1rem</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@include</span> media(<span class="string">'&lt;=1020'</span>)&#123; <span class="attribute">font-size</span>: <span class="number">1.1rem</span> &#125; /* =&gt; <span class="number">10%</span> 확대 */</span><br><span class="line">    @include media(<span class="string">'&lt;=960'</span>)&#123; font-size: <span class="number">1.2rem</span> &#125; /* =&gt; <span class="number">20%</span> 확대 */</span><br><span class="line"></span><br><span class="line">    /* ... */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.nav &#123;</span><br><span class="line">    font-size: <span class="number">1rem</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@include</span> media(<span class="string">'&lt;=960'</span>)&#123; <span class="attribute">font-size</span>: rem(<span class="number">12px</span>, <span class="number">14px</span>); &#125; <span class="comment">/* =&gt; 960px 이하일 때, 12px (루트 글자크기 14px) */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>하위 엘리먼트 요소를 직접 수정하는 일은 정말 최후의 수단(🗡️)이 됩니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">    &amp;__item &#123;</span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">@include</span> media(<span class="string">'&lt;=960'</span>)&#123; <span class="attribute">padding</span>: em(<span class="number">2px</span>, <span class="number">14px</span>); &#125; </span><br><span class="line"></span><br><span class="line">        <span class="comment">/* ... */</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="액자-frame-컴포넌트에서-상대단위-문제"><a href="#액자-frame-컴포넌트에서-상대단위-문제" class="headerlink" title="액자(frame) 컴포넌트에서 상대단위 문제"></a>액자(frame) 컴포넌트에서 상대단위 문제</h3><p>액자 컴포넌트란 외부로 컨텐츠를 입력받아 구성하는 컴포넌트를 의미합니다. <code>react</code>로 예를 들면 아래 코드에서 <code>Frame</code> 컴포넌트가 이에 해당합니다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div className=<span class="string">"app"</span>&gt;</span><br><span class="line">            I love</span><br><span class="line">            &lt;Frame&gt;</span><br><span class="line">                &lt;em className=<span class="string">"app__em"</span>&gt;css&lt;<span class="regexp">/em&gt; ❤️ </span></span><br><span class="line"><span class="regexp">            &lt;/</span>Frame&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;)</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><code>output</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">    I love</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"frame"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">em</span> <span class="attr">class</span>=<span class="string">"app__em"</span>&gt;</span>css<span class="tag">&lt;/<span class="name">em</span>&gt;</span> ❤️ </span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><code>Frame</code> 내부에 선언된 컨텐츠는 <code>App</code>에 소속됩니다. 그러나 실제 화면에서는 Frame 안에 그려지게 되고 컨텐츠 상대단위(<code>em</code>) 역시 App이 아닌, Frame 요소에 영향을 받습니다. 이렇게 되면 컴포넌트 단위 제어가 불가능할 뿐만 아니라 Frame 컴포넌트의 코드 변경때 마다 의도치 않은 스타일 변화가 생길 수 있습니다. </p>
+<h5 id="해결책"><a href="#해결책" class="headerlink" title="해결책"></a>해결책</h5><p>저는 <code>Frame</code> 컴포넌트와 입력 컨텐츠 사이에 <code>font-size</code>를 <code>rem</code>으로 다시 정의해서 이 문제를 해결하고 있습니다.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        &lt;div className=<span class="string">"app"</span>&gt;</span><br><span class="line">            I love</span><br><span class="line">            &lt;Frame className=<span class="string">"app__frame"</span>&gt; <span class="comment">// 👈 `app__frame` 클래스를 추가했습니다.</span></span><br><span class="line">                &lt;em className=<span class="string">"app__em"</span>&gt;css&lt;<span class="regexp">/em&gt; ❤️ </span></span><br><span class="line"><span class="regexp">            &lt;/</span>Frame&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;)</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><code>output</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">    I love</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"frame app__frame"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">em</span> <span class="attr">class</span>=<span class="string">"app__em"</span>&gt;</span>css<span class="tag">&lt;/<span class="name">em</span>&gt;</span> ❤️ </span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><code>scss</code><br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.app</span> &#123;</span><br><span class="line">    <span class="keyword">@mixin</span> init &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="number">1rem</span>;</span><br><span class="line">        <span class="keyword">@include</span> media(<span class="string">'&lt;=960'</span>)&#123; <span class="attribute">font-size</span>: <span class="number">1.2rem</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @include init;</span><br><span class="line">    &amp;__frame &#123; <span class="keyword">@include</span> init; &#125; <span class="comment">/* 👈 font-size를 다시 재정의합니다 */</span></span><br><span class="line"></span><br><span class="line">    &amp;__em &#123;</span><br><span class="line">        <span class="attribute">font-size</span>: em(<span class="number">18px</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>여러 방법을 시도했는데요, 결국 이 방법이 가장 클린했습니다. 😥 혹시 더 나은 방법이 있다면 댓글로 알려주세요. </p>
+<p>위 코드는 <code>app__frame</code> 클래스명을 Frame의 props로 전달하고 있는데 만약 이것이 여의치 않다면 컨텐츠를 새 div로 감싸거나 별도 컴포넌트로 분리하는 방법을 고려해 볼 수도 있습니다.</p>
+<h2 id="백분율-percent-를-픽셀로-표기하기"><a href="#백분율-percent-를-픽셀로-표기하기" class="headerlink" title="백분율(percent)를 픽셀로 표기하기"></a>백분율(<code>percent</code>)를 픽셀로 표기하기</h2><p><strong>변환</strong>을 통해서 상대단위를 유지하되 표기방식만 픽셀을 사용하는 것은 생각 이상으로 매우 중요합니다. 상대단위의 비직관성 때문에 개발자는 차라리 엘리먼트의 가변성을 포기하고 픽셀로 처리하고 싶은 유혹(디자이너와 적당한 타협을 통해)에 쉽사리 빠지기 때문입니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">480px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">360px</span>;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line"></span><br><span class="line">    &amp;__img &#123;</span><br><span class="line">        <span class="attribute">position</span>: absolute;</span><br><span class="line"></span><br><span class="line">        &amp;--star1 &#123;</span><br><span class="line">            <span class="attribute">width</span>: <span class="number">30px</span>;</span><br><span class="line">            <span class="attribute">top</span>: <span class="number">30px</span>;</span><br><span class="line">            <span class="attribute">left</span>: <span class="number">48px</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &amp;--star2 &#123;</span><br><span class="line">            <span class="attribute">width</span>: <span class="number">42px</span></span><br><span class="line">            top: <span class="number">22px</span>;</span><br><span class="line">            <span class="attribute">left</span>: <span class="number">292px</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &amp;--star3 &#123;</span><br><span class="line">            <span class="attribute">width</span>: <span class="number">25px</span></span><br><span class="line">            top: <span class="number">49px</span>;</span><br><span class="line">            <span class="attribute">left</span>: <span class="number">412px</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>디자이너에게 받은 box 엘리먼트의 크기는 <code>480px * 360px</code>이고 이 안에는 3개의 별이 위치해 있습니다. (디자이너는 별의 위치가 매우 정확하기를 기대합니다 😵) </p>
+<p>위 scss 코드는 이것을 구현한 예제인데요, 만약 이 컨테이너가 단지 화면너비 전부를 차지할 뿐이라면 480px의 고정된 크기 대신 상대단위인 <code>100%</code>를 쓰는 것이 바람직합니다. 미디어쿼리 작성 없이도 화면너비에 맞춰 자동으로 크기를 변경할 수 있기 때문입니다.</p>
+<h3 id="박스에-종횡비-aspect-ratio-적용하기"><a href="#박스에-종횡비-aspect-ratio-적용하기" class="headerlink" title="박스에 종횡비(aspect-ratio) 적용하기"></a>박스에 종횡비(aspect-ratio) 적용하기</h3><p>박스 엘리먼트 너비를 100%로 지정하면 너비 변화만큼 높이가 달라져야 합니다. 유명한 <a href="https://daverupert.com/2012/04/uncle-daves-ol-padded-box/" target="_blank" rel="noopener">Uncle Dave’s Ol’ Padded Box</a> 방법을 사용하기로 합시다. 이 방법은 <em>padding, margin 속성의 높이 단위가 백분율(<code>%</code>)이면 부모의 요소의 너비를 기준으로 계산</em>하는 원리를 이용합니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">    <span class="variable">$w</span>: <span class="number">480px</span>;</span><br><span class="line">    <span class="variable">$h</span>: <span class="number">360px</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line"></span><br><span class="line">    &amp;<span class="selector-pseudo">::before</span>&#123;</span><br><span class="line">        <span class="attribute">padding-top</span>: <span class="variable">$h</span> / <span class="variable">$w</span> * <span class="number">100%</span>; <span class="comment">/* =&gt; 75% */</span></span><br><span class="line">        <span class="attribute">content</span>: <span class="string">''</span>;</span><br><span class="line">        <span class="attribute">display</span>: block;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="percentage함수-활용하기"><a href="#percentage함수-활용하기" class="headerlink" title="percentage함수 활용하기"></a><code>percentage</code>함수 활용하기</h3><p>scss에는 이미 <code>percentage</code>라는 빌트인(builtin) 함수가 있습니다. 이 함수를 이용해 별의 위치를 픽셀에서 퍼센트로 손쉽게 변환할 수 있습니다. </p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">    &amp;__img &#123;</span><br><span class="line">        <span class="attribute">position</span>: absolute;</span><br><span class="line"></span><br><span class="line">        &amp;--star1 &#123;</span><br><span class="line">            <span class="attribute">width</span>: percentage(<span class="number">30px</span>, / <span class="variable">$w</span>);</span><br><span class="line">            <span class="attribute">top</span>: percentage(<span class="number">30px</span> / <span class="variable">$h</span>);</span><br><span class="line">            <span class="attribute">left</span>: percentage(<span class="number">48px</span> / <span class="variable">$w</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &amp;--star2 &#123;</span><br><span class="line">            <span class="attribute">width</span>: percentage(<span class="number">42px</span>, / <span class="variable">$w</span>);</span><br><span class="line">            <span class="attribute">top</span>: percentage(<span class="number">22px</span> / <span class="variable">$h</span>);</span><br><span class="line">            <span class="attribute">left</span>: percentage(<span class="number">292px</span> / <span class="variable">$w</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &amp;--star3 &#123;</span><br><span class="line">            <span class="attribute">width</span>: percentage(<span class="number">25px</span>, / <span class="variable">$w</span>);</span><br><span class="line">            <span class="attribute">top</span>: percentage(<span class="number">49px</span> / <span class="variable">$h</span>);</span><br><span class="line">            <span class="attribute">left</span>: percentage(<span class="number">412px</span> / <span class="variable">$w</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>앞서 작성한 가상요소(before)의 padding-top 속성도 계산식 대신, percentage함수로 교체합니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line"></span><br><span class="line">    &amp;<span class="selector-pseudo">::before</span>&#123;</span><br><span class="line">        <span class="attribute">padding-top</span>: percentage(<span class="variable">$h</span> / <span class="variable">$w</span>); <span class="comment">/* 👈 percentage 함수로 교체 */</span></span><br><span class="line">        <span class="attribute">content</span>: <span class="string">''</span>;</span><br><span class="line">        <span class="attribute">display</span>: block;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* ... */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>화면너비에 따라 박스와 내부 모든 요소의 위치가 비율을 유지하며 바뀌는 것을 볼 수 있습니다.</p>
+<h2 id="화면너비-변화와-동일하지-않은-비례-요소-변환하기"><a href="#화면너비-변화와-동일하지-않은-비례-요소-변환하기" class="headerlink" title="화면너비 변화와 동일하지 않은 비례 요소 변환하기"></a>화면너비 변화와 동일하지 않은 비례 요소 변환하기</h2><p>백분율(percent)을 사용해 반응형 코드를 작성하면 각 요소의 크기, 위치등이 화면너비 변화와 1(비례상수)로 정비례합니다. 그러나 종종 디자인 요구사항은 화면너비 변화율과 일치하지 않을 수 있습니다. 이때 대응해야 하는 화면 너비 지점에서 요소를 직접 수정하는 방법을 흔히 선택합니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">95%</span>;</span><br><span class="line">    <span class="attribute">padding</span>: em(<span class="number">30px</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">@include</span> media(<span class="string">'&lt;=960'</span>)&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">60%</span>;</span><br><span class="line">        <span class="attribute">padding</span>: em(<span class="number">15px</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>그러나 이 방법은 미디어쿼리 조건에 도달하기 직전의 화면 너비에서 레이아웃이 부자연스럽거나 깨지는 현상이 발생합니다.</p>
+<h3 id="vw-활용하기"><a href="#vw-활용하기" class="headerlink" title="vw 활용하기"></a><code>vw</code> 활용하기</h3><p><code>vw</code>는 화면너비 백분율(percent)로 크기를 정할 수 있는 단위입니다. 예를 들어 화면너비가 1980px이면 50vw는 990px이고 10vw는 198px이 됩니다. vw를 사용하면 화면너비를 엘리먼트로 직접 가져와 계산식을 쓸 수 있기 때문에 화면너비에 비례한(그러나 반드시 1로 정비례할 필요없는) 크기를 지정할 수 있습니다.</p>
+<p>content 부모요소 너비가 화면너비와 동일하다고 가정하고 대응해야 하는 화면너비 사이에서의 content 너비 변화율(기울기)을 계산합시다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$from-screen</span>: <span class="number">960px</span>;</span><br><span class="line"><span class="variable">$to-screen</span>: <span class="number">1980px</span>;</span><br><span class="line"><span class="variable">$form</span>: <span class="variable">$from-screen</span> * <span class="number">0.6</span>;</span><br><span class="line"><span class="variable">$to</span>: <span class="variable">$to-screen</span> * <span class="number">0.95</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$rate</span>: (<span class="variable">$to</span> - <span class="variable">$from</span>) / (<span class="variable">$to-screen</span> - <span class="variable">$from-screen</span>);</span><br></pre></td></tr></table></figure>
+<p><code>$rate</code>는 화면너비가 1px 커질 때 마다 증가해야 하는 크기입니다. 이 변화율과 화면너비(<code>100vw</code>)를 곱한 식(<code>calc($rate * 100vw)</code>)을 속성에 사용하면 화면너비에 따라 원하는 변화율(기울기)로 값이 바뀌는 엘리먼트 크기를 지정할 수 있습니다.</p>
+<p>그러나 아직 조금 부족합니다. 화면너비가 <code>$rate</code>크기만큼 증가하지만 화면너비가 <code>$from-screen</code>이나 <code>$to-screen</code>에 도달해도 값은 여전히 <code>$from</code> 또는 <code>$to</code>가 되지 않습니다. 1차원 함수 그래프(100vw가 x인)를 생각하면 되는데요, 화면너비가 <code>$from-screen</code>에 도달했을 때 <code>$from</code>이 되게끔 절대단위 값으로 보정해야 합니다. (1차 함수 그래프의 평행이동과 똑같습니다 👀) </p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$width</span>: calc(#&#123;<span class="variable">$ratio</span> * <span class="number">100</span>&#125;vw + #&#123;-(<span class="variable">$ratio</span> * <span class="variable">$from-screen</span>) + <span class="variable">$from</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>지금은 <code>$from-screen</code>을 기준으로 보정했지만 변화율(기울기)에 의해 자동으로 화면너비가 <code>$to-screen</code>일때 <code>$to</code>가 됩니다. </p>
+<p>아래는 지금까지 내용을 scss함수로 정의한 것입니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@function</span> between(<span class="variable">$from</span>, <span class="variable">$to</span>, <span class="variable">$from-screen</span>, <span class="variable">$to-screen</span>) &#123;</span><br><span class="line">    <span class="variable">$rate</span>: (<span class="variable">$to</span> - <span class="variable">$from</span>) / (<span class="variable">$to-screen</span> - <span class="variable">$from-screen</span>);</span><br><span class="line">    <span class="keyword">@return</span> calc(#&#123;<span class="variable">$rate</span> * 100&#125;vw + #&#123;-(<span class="variable">$rate</span> * <span class="variable">$from-screen</span>) + <span class="variable">$from</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>미디어쿼리 대신, 정의한 between함수로 content를 스탕일링합니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="variable">$from-screen</span>: <span class="number">960px</span>;</span><br><span class="line">    <span class="variable">$to-screen</span>: <span class="number">1980px</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">width</span>: between(<span class="variable">$from-screen</span> * <span class="number">0.6</span>, <span class="variable">$to-screen</span> * <span class="number">0.95</span>, <span class="variable">$from-screen</span>, <span class="variable">$to-screen</span>);</span><br><span class="line">    <span class="attribute">padding</span>: between(<span class="number">15px</span>, <span class="number">30px</span>, <span class="variable">$from-screen</span>, <span class="variable">$to-screen</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>$from-screen</code>, <code>$to-screen</code> 사이를 벗어난 화면너비에서 크기가 너무 커지거나 줄어드는 것을 방지하기 위해서 아래처럼 제약을 추가할 수도 있습니다.</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">    <span class="variable">$from-screen</span>: <span class="number">960px</span>;</span><br><span class="line">    <span class="variable">$to-screen</span>: <span class="number">1980px</span>;</span><br><span class="line">    <span class="variable">$from-w</span>: <span class="variable">$from-screen</span> * <span class="number">0.6</span>;</span><br><span class="line">    <span class="variable">$to-w</span>: <span class="variable">$to-screen</span> * <span class="number">0.95</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">width</span>: between(<span class="variable">$from-w</span>, <span class="variable">$to-w</span>, <span class="variable">$from-screen</span>, <span class="variable">$to-screen</span>);</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="variable">$from-w</span>;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="variable">$to-w</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">padding</span>: between(<span class="number">15px</span>, <span class="number">30px</span>, <span class="variable">$from-screen</span>, <span class="variable">$to-screen</span>);</span><br><span class="line">    <span class="keyword">@include</span> media(<span class="string">'&gt;1980'</span>)&#123; <span class="attribute">padding</span>: em(<span class="number">30px</span>); &#125;</span><br><span class="line">    <span class="keyword">@include</span> media(<span class="string">'&lt;=960'</span>)&#123; <span class="attribute">padding</span>: em(<span class="number">15px</span>); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>여기서는 max-width, min-width, 미디어쿼리로 제약을 걸었지만 최신 브라우저에서는 <a href="https://www.w3.org/TR/css-values-4/#calc-notation" target="_blank" rel="noopener"><code>min()</code>, <code>max()</code>, <code>clamp()</code></a>를 사용하는 방법도 있습니다.</p>
+<h2 id="모든-것을-상대단위로-바꾸지-마세요"><a href="#모든-것을-상대단위로-바꾸지-마세요" class="headerlink" title="모든 것을 상대단위로 바꾸지 마세요"></a>모든 것을 상대단위로 바꾸지 마세요</h2><p>마지막으로 당부하고 싶은 점은 모든 것을 상대단위(rem, em, %)로 바꿀 필요는 없단 사실입니다. 가변성이 없다면(특히 <code>border</code>같은) 픽셀를 사용하세요. 또 가변성은 존재하나 미약하고 상대단위로 변환하는 공식이 너무 복잡한 상황에서도 픽셀과 미디어쿼리를 사용합시다. 배보다 배꼽이 더 클 수 있기 때문입니다.</p>
+<h2 id="마치며"><a href="#마치며" class="headerlink" title="마치며"></a>마치며</h2><p>scss를 사용하고 있다면 제가 만든 <a href="https://github.com/skt-t1-byungi/thejungle" target="_blank" rel="noopener">thejungle</a>를, css-in-js 환경이라면 <a href="https://polished.js.org/" target="_blank" rel="noopener">polished.js</a>로 지금까지 사용한 헬퍼함수를 따로 만들지 않고 바로 쓸 수 있습니다.</p>
+<p>저는 최근 몇년 전부터 이 방법(픽셀리스 css 레이아웃)을 사용해 제품을 개발해 왔습니다. 그리고 다양한 해상도를 가진 기기들을 수월하게 대응할 수 있게 되면서 크게 만족했습니다. 다른 분들도 똑같은 성취감을 얻을 것이라고 믿습니다. 😎 </p>
+<p>만약 다른 의견이나 제안이 있다면 댓글를 남겨주세요. 답변드리겠습니다. 감사합니다.</p>
+<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p><img src="https://avatars2.githubusercontent.com/u/16894698?v=4" width="110" align="left" style="margin-right: 10px"> </p>
+<p><strong>BYUNGI</strong><br><a href="https://github.com/skt-t1-byungi" target="_blank" rel="noopener">https://github.com/skt-t1-byungi</a><br><code>write less, do more</code></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/css/" rel="tag"># css</a>
+          
+            <a href="/tags/layout/" rel="tag"># layout</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/react-code-splitting/" rel="next" title="React Code Splitting">
+                <i class="fa fa-chevron-left"></i> React Code Splitting
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/IntersectionObserver/" rel="prev" title="화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기">
+                화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            목차
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            흝어보기
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/logo/favicon-96x96.png" alt="cross-code">
+            
+              <p class="site-author-name" itemprop="name">cross-code</p>
+              <div class="site-description motion-element" itemprop="description">프론트엔드 개발을 좋아하는 사람들의 공동 블로그</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">포스트</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">태그</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#왜-픽셀-px-을-없애야-할까"><span class="nav-text">왜 픽셀(px)을 없애야 할까?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rem-활용하기"><span class="nav-text">rem 활용하기</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#픽셀을-포기할-수-없는-이유"><span class="nav-text">픽셀을 포기할 수 없는 이유</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#scss-변환함수-활용하기"><span class="nav-text">scss 변환함수 활용하기</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#컴포넌트"><span class="nav-text">컴포넌트</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BEM-css-방법론-과-em-활용하기"><span class="nav-text">BEM(css 방법론)과 em 활용하기</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#기본-레이아웃-구현하기"><span class="nav-text">기본 레이아웃 구현하기</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#액자-frame-컴포넌트에서-상대단위-문제"><span class="nav-text">액자(frame) 컴포넌트에서 상대단위 문제</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#해결책"><span class="nav-text">해결책</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#백분율-percent-를-픽셀로-표기하기"><span class="nav-text">백분율(percent)를 픽셀로 표기하기</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#박스에-종횡비-aspect-ratio-적용하기"><span class="nav-text">박스에 종횡비(aspect-ratio) 적용하기</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#percentage함수-활용하기"><span class="nav-text">percentage함수 활용하기</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#화면너비-변화와-동일하지-않은-비례-요소-변환하기"><span class="nav-text">화면너비 변화와 동일하지 않은 비례 요소 변환하기</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vw-활용하기"><span class="nav-text">vw 활용하기</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#모든-것을-상대단위로-바꾸지-마세요"><span class="nav-text">모든 것을 상대단위로 바꾸지 마세요</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#마치며"><span class="nav-text">마치며</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#작성자"><span class="nav-text">작성자</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cross Code Members</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/posts/pixeless_css_layout/";
+    this.page.identifier = "posts/pixeless_css_layout/";
+    this.page.title = '픽셀 없는(pixeless) CSS 레이아웃';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://cross-code.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    $(function() {
+      var offsetTop = $('#comments').offset().top - $(window).height();
+      if (offsetTop <= 0) {
+        // load directly when there's no a scrollbar
+        loadComments();
+      } else {
+        $(window).on('scroll.disqus_scroll', function() {
+          // offsetTop may changes because of manually resizing browser window or lazy loading images.
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          var scrollTop = $(window).scrollTop();
+
+          // pre-load comments a bit? (margin or anything else)
+          if (offsetTop - scrollTop < 60) {
+            $(window).off('.disqus_scroll');
+            loadComments();
+          }
+        });
+      }
+    });
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

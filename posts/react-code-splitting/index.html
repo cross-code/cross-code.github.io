@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next gemini" lang="ko">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-icon-180x180.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png?v=7.0.1">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="코드 분할번들링은 훌륭하지만 앱이 커지면 번들도 커져서 로드 속도가 느려집니다. 프로젝트 초기라면 괜찮습니다. 하지만 프로젝트 규모가 커지고 최적화가 필요한 단계에서 Code Splitting을 한다면 서비스 퍼포먼스가 좋아지기 때문에 사용자들에게 보다 나은 사용자 경험을 줄 수 있습니다. 방법 #1. React.lazyReact.lazy 함수를 사용하면">
+<meta name="keywords" content="codeJS,react,code splitting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Code Splitting">
+<meta property="og:url" content="http://yoursite.com/posts/react-code-splitting/index.html">
+<meta property="og:site_name" content="Cross Code">
+<meta property="og:description" content="코드 분할번들링은 훌륭하지만 앱이 커지면 번들도 커져서 로드 속도가 느려집니다. 프로젝트 초기라면 괜찮습니다. 하지만 프로젝트 규모가 커지고 최적화가 필요한 단계에서 Code Splitting을 한다면 서비스 퍼포먼스가 좋아지기 때문에 사용자들에게 보다 나은 사용자 경험을 줄 수 있습니다. 방법 #1. React.lazyReact.lazy 함수를 사용하면">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4">
+<meta property="og:updated_time" content="2020-08-05T01:15:32.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React Code Splitting">
+<meta name="twitter:description" content="코드 분할번들링은 훌륭하지만 앱이 커지면 번들도 커져서 로드 속도가 느려집니다. 프로젝트 초기라면 괜찮습니다. 하지만 프로젝트 규모가 커지고 최적화가 필요한 단계에서 Code Splitting을 한다면 서비스 퍼포먼스가 좋아지기 때문에 사용자들에게 보다 나은 사용자 경험을 줄 수 있습니다. 방법 #1. React.lazyReact.lazy 함수를 사용하면">
+<meta name="twitter:image" content="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/react-code-splitting/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>React Code Splitting | Cross Code</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ko">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cross Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">기술 블로그</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>홈</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">10</span></a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/react-code-splitting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cross-code">
+      <meta itemprop="description" content="프론트엔드 개발을 좋아하는 사람들의 공동 블로그">
+      <meta itemprop="image" content="/images/logo/favicon-96x96.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cross Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React Code Splitting
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">작성일</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2019-09-18 23:54:31" itemprop="dateCreated datePublished" datetime="2019-09-18T23:54:31+09:00">2019-09-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2020-08-05 10:15:32" itemprop="dateModified" datetime="2020-08-05T10:15:32+09:00">2020-08-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="코드-분할"><a href="#코드-분할" class="headerlink" title="코드 분할"></a>코드 분할</h2><p>번들링은 훌륭하지만 앱이 커지면 번들도 커져서 로드 속도가 느려집니다. 프로젝트 초기라면 괜찮습니다. 하지만 프로젝트 규모가 커지고 최적화가 필요한 단계에서 Code Splitting을 한다면 서비스 퍼포먼스가 좋아지기 때문에 사용자들에게 보다 나은 사용자 경험을 줄 수 있습니다.</p>
+<h2 id="방법-1-React-lazy"><a href="#방법-1-React-lazy" class="headerlink" title="방법 #1. React.lazy"></a>방법 #1. React.lazy</h2><p>React.lazy 함수를 사용하면 동적 import를 사용해서 컴포넌트를 렌더링 할 수 있습니다.<br>(React.lazy는 React 16.6버전 부터 지원합니다.)</p>
+<h3 id="Before"><a href="#Before" class="headerlink" title="Before"></a>Before</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> OtherComponent <span class="keyword">from</span> <span class="string">"./OtherComponent"</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="After"><a href="#After" class="headerlink" title="After"></a>After</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> OtherComponent = <span class="keyword">import</span> React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./OtherComponent'</span>));</span><br></pre></td></tr></table></figure>
+<h3 id="With-Suspense"><a href="#With-Suspense" class="headerlink" title="With Suspense"></a>With Suspense</h3><p>lazy 컴포넌트는 Suspense 컴포넌트 하위에서 렌더링되어야 하며, Suspense는 lazy 컴포넌트가 로드되길 기다리는 동안 로딩 화면과 같은 예비 컨텐츠를 보여줄 수 있게 해줍니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> OtherComponent = React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./OtherComponent"</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;<span class="regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;OtherComponent /</span>&gt;</span><br><span class="line">      &lt;<span class="regexp">/Suspense&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>하나의 Suspense 컴포넌트로 여러 lazy 컴포넌트를 감쌀 수도 있습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> OtherComponent = React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./OtherComponent"</span>));</span><br><span class="line"><span class="keyword">const</span> AnotherComponent = React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./AnotherComponent"</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;<span class="regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;section&gt;</span></span><br><span class="line"><span class="regexp">          &lt;OtherComponent /</span>&gt;</span><br><span class="line">          &lt;AnotherComponent /&gt;</span><br><span class="line">        &lt;<span class="regexp">/section&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>Suspense&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Route-based-code-splitting"><a href="#Route-based-code-splitting" class="headerlink" title="Route-based code splitting"></a>Route-based code splitting</h3><p>앱 코드를 분리하는 단위는 선택이지만, 좋은 방법 중에 하나는 라우트 단위로 분할 하는 방법입니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; BrowserRouter <span class="keyword">as</span> Router, Route, Switch &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> React, &#123; Suspense, lazy &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Home = lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./routes/Home"</span>));</span><br><span class="line"><span class="keyword">const</span> About = lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./routes/About"</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> App = <span class="function"><span class="params">()</span> =&gt;</span> (</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">    &lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;<span class="regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Switch&gt;</span></span><br><span class="line"><span class="regexp">        &lt;Route exact path="/</span><span class="string">" component=&#123;Home&#125; /&gt;</span></span><br><span class="line"><span class="string">        &lt;Route path="</span>/about<span class="string">" component=&#123;About&#125; /&gt;</span></span><br><span class="line"><span class="string">      &lt;/Switch&gt;</span></span><br><span class="line"><span class="string">    &lt;/Suspense&gt;</span></span><br><span class="line"><span class="string">  &lt;/Router&gt;</span></span><br><span class="line"><span class="string">);</span></span><br></pre></td></tr></table></figure>
+<h3 id="코드-Build-결과"><a href="#코드-Build-결과" class="headerlink" title="코드 Build 결과"></a>코드 Build 결과</h3><p>dist 디렉토리를 보면 라우팅 단위로 파일이 분리되어 생성된것을 확인 할 수 있습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">react-app</span><br><span class="line"> dist/</span><br><span class="line">  - index.html</span><br><span class="line">  - main.b1234.js (contains Appcomponent and bootstrap code)</span><br><span class="line">  - home.bc4567.js (contains Home)</span><br><span class="line">  - about.bc4567.js (contains About)</span><br><span class="line"></span><br><span class="line"><span class="comment">/** index.html **/</span></span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;div id=<span class="string">"root"</span>&gt;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  &lt;script src="main.b1234.js"&gt;&lt;/</span>script&gt;</span><br><span class="line">&lt;<span class="regexp">/head&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="흔히-발생할-수-있는-실수"><a href="#흔히-발생할-수-있는-실수" class="headerlink" title="흔히 발생할 수 있는 실수"></a>흔히 발생할 수 있는 실수</h3><p>import 하는 페이지 내부에 사용중인 컴포넌트가 사용하지 않는 다른 컴포넌트와 index.js에 export를 편의상 묶어 사용하는 경우가 있습니다. 이때 컴포넌트 import시 객체 디스트럭쳐링을 사용할 경우 내부적으로 사용하지 않는 컴포넌트도 함께 로드되기 때문에 코드 분할 시 큰 효과를 보지 못합니다. 그렇기 때문에 실사용 컴포넌트만 개별 임포트 하는것이 중요합니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 예로, PageA를 코드 분할하려고 합니다.</span></span><br><span class="line"><span class="keyword">const</span> PageA = React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./PageA"</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;<span class="regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;PageA /</span>&gt;</span><br><span class="line">      &lt;<span class="regexp">/Suspense&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// PageA.js 에선 Button 컴포넌트를 사용하려고 import하고 있습니다.</span></span><br><span class="line"><span class="keyword">import</span> &#123; Button &#125; <span class="keyword">from</span> <span class="string">"./components"</span>; <span class="comment">// X 사용하지 않는 다른 컴포넌트도 함께 로드됩니다.</span></span><br><span class="line"><span class="keyword">import</span> Button <span class="keyword">from</span> <span class="string">"./components/Button"</span>; <span class="comment">// O 개별 컴포넌트로 로드해야 불필요한 컴포넌트가 로드되어 파일 사이즈가 커지는것을 방지할 수 있습니다.</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">PageA</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;h1&gt;PageA&lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Button&gt;OK&lt;/</span>Button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ components/i</span>ndex.js</span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> Loader &#125; <span class="keyword">from</span> <span class="string">"./common/Loader"</span>;</span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> Button &#125; <span class="keyword">from</span> <span class="string">"./common/OtherSetting"</span>;</span><br><span class="line"><span class="keyword">export</span> &#123; <span class="keyword">default</span> <span class="keyword">as</span> InsideSearch &#125; <span class="keyword">from</span> <span class="string">"./common/InsideSearch"</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="방법-2-Loadable-Components"><a href="#방법-2-Loadable-Components" class="headerlink" title="방법 #2. Loadable Components"></a>방법 #2. Loadable Components</h2><p>React.lazy와 Suspense는 서버 사이드 렌더링을 지원하지 않습니다. 코드 분할을 클라이언트, 서버사이드 모두 가능하도록 만들고 싶다면 Loadable Components를 사용하면됩니다. (React 공식 문서에서 권장하는 방법)</p>
+<h3 id="React-lazy와-비교"><a href="#React-lazy와-비교" class="headerlink" title="React.lazy와 비교"></a>React.lazy와 비교</h3><table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Suspense</th>
+<th>SSR</th>
+<th>Library splitting</th>
+<th>import(<code>./${value}</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React.lazy</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>@loadable/component</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm install @loadable/component</span><br><span class="line"></span><br><span class="line"># or use yarn</span><br><span class="line">yarn add @loadable/component</span><br></pre></td></tr></table></figure>
+<h3 id="loadable-Import"><a href="#loadable-Import" class="headerlink" title="loadable Import"></a>loadable Import</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> loadable <span class="keyword">from</span> <span class="string">"@loadable/component"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> OtherComponent = loadable(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./OtherComponent"</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;OtherComponent /&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="With-Suspense-1"><a href="#With-Suspense-1" class="headerlink" title="With Suspense"></a>With Suspense</h3><p>React Suspense를 지원하여 함께 사용할 수 있습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Suspense &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; lazy &#125; <span class="keyword">from</span> <span class="string">"@loadable/component"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> OtherComponent = lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">"./OtherComponent"</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;<span class="regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;OtherComponent /</span>&gt;</span><br><span class="line">      &lt;<span class="regexp">/Suspense&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Full-dynamic-import"><a href="#Full-dynamic-import" class="headerlink" title="Full dynamic import"></a>Full dynamic import</h3><p>다이나믹하게 import() 하는 Loadable Component를 만들어서 코드의 반복을 줄일 수 있습니다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> loadable <span class="keyword">from</span> <span class="string">"@loadable/component"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> AsyncPage = loadable(<span class="function">(<span class="params">props</span>) =&gt;</span> <span class="keyword">import</span>(<span class="string">`./<span class="subst">$&#123;props.page&#125;</span>`</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;AsyncPage page=<span class="string">"Home"</span> /&gt;</span><br><span class="line">      &lt;AsyncPage page=<span class="string">"Contact"</span> /&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="번외-React-loadable"><a href="#번외-React-loadable" class="headerlink" title="번외, React-loadable"></a>번외, React-loadable</h2><p>React-loadable 모듈은 React 공식 문서에서도 오랫동안 권장하던 방법이었습니다. 그러나 현재는 더 이상 유지 관리되지 않으며 Webpack v4 + 및 Babel v7 +와 호환되지 않는 부분들이 있습니다.<br>그래서 <a href="https://webpack.js.org/guides/code-splitting/" target="_blank" rel="noopener">React.lazy</a> 또는 <a href="https://www.smooth-code.com/open-source/loadable-components/docs/getting-started/" target="_blank" rel="noopener">Loadable components</a>로 변경하는것을 추천합니다.</p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a href="https://webpack.js.org/guides/code-splitting/" target="_blank" rel="noopener">Webpack code splitting</a></li>
+<li><a href="https://www.smooth-code.com/open-source/loadable-components/docs/getting-started/" target="_blank" rel="noopener">Loadable components</a></li>
+</ul>
+<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p><img src="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4" width="100" align="left" style="margin-right: 10px"></p>
+<p><strong>codeJS 🐘</strong><br><a href="https://github.com/dodortus" target="_blank" rel="noopener">https://github.com/dodortus</a><br><code>simple is best</code></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/codeJS/" rel="tag"># codeJS</a>
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+            <a href="/tags/code-splitting/" rel="tag"># code splitting</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/WebRTC/" rel="next" title="WebRTC (Web Real-Time Communication) 소개">
+                <i class="fa fa-chevron-left"></i> WebRTC (Web Real-Time Communication) 소개
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/pixeless_css_layout/" rel="prev" title="픽셀 없는(pixeless) CSS 레이아웃">
+                픽셀 없는(pixeless) CSS 레이아웃 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            목차
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            흝어보기
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/logo/favicon-96x96.png" alt="cross-code">
+            
+              <p class="site-author-name" itemprop="name">cross-code</p>
+              <div class="site-description motion-element" itemprop="description">프론트엔드 개발을 좋아하는 사람들의 공동 블로그</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">포스트</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">태그</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#코드-분할"><span class="nav-text">코드 분할</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#방법-1-React-lazy"><span class="nav-text">방법 #1. React.lazy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Before"><span class="nav-text">Before</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#After"><span class="nav-text">After</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#With-Suspense"><span class="nav-text">With Suspense</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Route-based-code-splitting"><span class="nav-text">Route-based code splitting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#코드-Build-결과"><span class="nav-text">코드 Build 결과</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#흔히-발생할-수-있는-실수"><span class="nav-text">흔히 발생할 수 있는 실수</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#방법-2-Loadable-Components"><span class="nav-text">방법 #2. Loadable Components</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#React-lazy와-비교"><span class="nav-text">React.lazy와 비교</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Install"><span class="nav-text">Install</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loadable-Import"><span class="nav-text">loadable Import</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#With-Suspense-1"><span class="nav-text">With Suspense</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Full-dynamic-import"><span class="nav-text">Full dynamic import</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#번외-React-loadable"><span class="nav-text">번외, React-loadable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#참고"><span class="nav-text">참고</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#작성자"><span class="nav-text">작성자</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cross Code Members</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/posts/react-code-splitting/";
+    this.page.identifier = "posts/react-code-splitting/";
+    this.page.title = 'React Code Splitting';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://cross-code.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    $(function() {
+      var offsetTop = $('#comments').offset().top - $(window).height();
+      if (offsetTop <= 0) {
+        // load directly when there's no a scrollbar
+        loadComments();
+      } else {
+        $(window).on('scroll.disqus_scroll', function() {
+          // offsetTop may changes because of manually resizing browser window or lazy loading images.
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          var scrollTop = $(window).scrollTop();
+
+          // pre-load comments a bit? (margin or anything else)
+          if (offsetTop - scrollTop < 60) {
+            $(window).off('.disqus_scroll');
+            loadComments();
+          }
+        });
+      }
+    });
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

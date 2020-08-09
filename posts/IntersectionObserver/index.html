@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next gemini" lang="ko">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-icon-180x180.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png?v=7.0.1">
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="IntersectionObserver API란IntersectionObserver API는 타겟 엘리멘트가 화면(viewport)에 보여지고 있는지 관찰하는 API입니다.크롬 51버전부터 사용 가능하며, 현재 대부분의 모던 브라우저에서 지원합니다.IntersectionObserver 이전엔 화면에 보이는 요소를 감지하려면 Scroll 이벤트를 사용하여 스크">
+<meta name="keywords" content="IntersectionObserver,LasyLoading,codeJS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기">
+<meta property="og:url" content="http://yoursite.com/posts/IntersectionObserver/index.html">
+<meta property="og:site_name" content="Cross Code">
+<meta property="og:description" content="IntersectionObserver API란IntersectionObserver API는 타겟 엘리멘트가 화면(viewport)에 보여지고 있는지 관찰하는 API입니다.크롬 51버전부터 사용 가능하며, 현재 대부분의 모던 브라우저에서 지원합니다.IntersectionObserver 이전엔 화면에 보이는 요소를 감지하려면 Scroll 이벤트를 사용하여 스크">
+<meta property="og:locale" content="ko">
+<meta property="og:image" content="http://yoursite.com/posts/IntersectionObserver/intersection-observer.png">
+<meta property="og:image" content="http://yoursite.com/posts/IntersectionObserver/preview.gif">
+<meta property="og:image" content="http://yoursite.com/posts/IntersectionObserver/browser-compatibility.png">
+<meta property="og:image" content="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4">
+<meta property="og:updated_time" content="2020-08-05T01:15:32.457Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기">
+<meta name="twitter:description" content="IntersectionObserver API란IntersectionObserver API는 타겟 엘리멘트가 화면(viewport)에 보여지고 있는지 관찰하는 API입니다.크롬 51버전부터 사용 가능하며, 현재 대부분의 모던 브라우저에서 지원합니다.IntersectionObserver 이전엔 화면에 보이는 요소를 감지하려면 Scroll 이벤트를 사용하여 스크">
+<meta name="twitter:image" content="http://yoursite.com/posts/IntersectionObserver/intersection-observer.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/IntersectionObserver/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기 | Cross Code</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ko">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cross Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">기술 블로그</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>홈</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>아카이브<span class="badge">10</span></a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/IntersectionObserver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="cross-code">
+      <meta itemprop="description" content="프론트엔드 개발을 좋아하는 사람들의 공동 블로그">
+      <meta itemprop="image" content="/images/logo/favicon-96x96.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cross Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">작성일</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2020-07-16 23:11:31" itemprop="dateCreated datePublished" datetime="2020-07-16T23:11:31+09:00">2020-07-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2020-08-05 10:15:32" itemprop="dateModified" datetime="2020-08-05T10:15:32+09:00">2020-08-05</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="IntersectionObserver-API란"><a href="#IntersectionObserver-API란" class="headerlink" title="IntersectionObserver API란"></a>IntersectionObserver API란</h2><p><strong>IntersectionObserver API는 타겟 엘리멘트가 화면(viewport)에 보여지고 있는지 관찰하는 API입니다.</strong><br>크롬 51버전부터 사용 가능하며, 현재 대부분의 모던 브라우저에서 지원합니다.<br>IntersectionObserver 이전엔 화면에 보이는 요소를 감지하려면 Scroll 이벤트를 사용하여 스크롤의 좌표와 화면의 크기를 더해서 관찰하려는 요소의 offset 좌표가 포함되는지를 계산해야 하는 번거로움뿐만 아니라 반복적인 스크롤 연산 처리 과정의 성능 이슈가 따릅니다. 그래서 아래와 같은 상황에 이 API를 활용하는 것을 권장합니다.</p>
+<p><img src="./intersection-observer.png" alt="IntersectionObserver"></p>
+<h2 id="어떻게-활용하면-좋을까요"><a href="#어떻게-활용하면-좋을까요" class="headerlink" title="어떻게 활용하면 좋을까요?"></a>어떻게 활용하면 좋을까요?</h2><ul>
+<li>Image Lasy loading 구현할 때</li>
+<li>Content Lasy loading 구현할 때</li>
+<li>Infinite scrolling 구현할 때</li>
+<li>화면에 보이는 요소 에니메이션 처리할 때</li>
+</ul>
+<h2 id="주요-API-알아보기"><a href="#주요-API-알아보기" class="headerlink" title="주요 API 알아보기"></a>주요 API 알아보기</h2><h3 id="구문"><a href="#구문" class="headerlink" title="구문"></a>구문</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> observer = <span class="keyword">new</span> IntersectionObserver(callback, options);</span><br></pre></td></tr></table></figure>
+<h3 id="메서드"><a href="#메서드" class="headerlink" title="메서드"></a>메서드</h3><p>observe, unobserve, disconnect 메서드를 주로 사용하게 된다.</p>
+<ul>
+<li>observe(targetElement): 타겟 엘리먼트에 대한 관찰을 시작할 때 사용합니다.</li>
+<li>unobserve(targetElement): 타겟 엘리먼트에 대한 관찰을 멈출 때 사용합니다.</li>
+<li>disconnect(): 다수의 엘리먼트를 관찰하고 있을 때, 이에 대한 모든 관찰을 멈추고 싶을 때 사용합니다.</li>
+<li>takeRecords(): 관찰중인 엘리먼트의 IntersectionObserverEntry 객체를 배열로 반환한다.</li>
+</ul>
+<h3 id="옵션-속성"><a href="#옵션-속성" class="headerlink" title="옵션 속성"></a>옵션 속성</h3><p>옵저버를 조정할 수 있는 옵션 객체로 위 구문의 options에 기입합니다.<br>지금은 이런 내용이 있다 정도만 알아두고, 자세히 다뤄보고자 할 때 다시 봐도 늦지 않는다.</p>
+<ul>
+<li>root<ul>
+<li>대상 요소 (element) 를 감시할 상위 요소.</li>
+<li>default: null (document가 root로 사용된다)</li>
+</ul>
+</li>
+<li>rootMargin<ul>
+<li>바깥 여백(Margin)을 이용해 Root 범위를 확장하거나 축소할 수 있습니다.</li>
+<li>default: 0px 0px 0px 0px</li>
+</ul>
+</li>
+<li>threshold<ul>
+<li>관측 대상이 화면에 어느 정도 노출될때 보인다고 판단할지 비율을 지정할 수 있다. (0.0 ~ 1.0 지정 가능하고, 0.0은 관측 대상이 1픽셀이라도 보이면, 1.0은 요소가 전부 보일때 노출됬다고 판단한다)</li>
+<li>default: 0.0</li>
+</ul>
+</li>
+</ul>
+<h2 id="간단한-예제로-동작-원리-알아보기"><a href="#간단한-예제로-동작-원리-알아보기" class="headerlink" title="간단한 예제로 동작 원리 알아보기"></a>간단한 예제로 동작 원리 알아보기</h2><p>화면에 보이는 블럭은 노란 배경색이 차오르고, 블럭이 화면 밖으로 나가면 다시 배경색이 사라지는 예제입니다. <a href="https://codesandbox.io/s/intersectionobserver-basic-tikcp?file=/src/index.js" target="_blank" rel="noopener">(DEMO)</a></p>
+<p><img src="./preview.gif" alt="Browser compatibility"></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> io = <span class="keyword">new</span> IntersectionObserver(<span class="function">(<span class="params">entries</span>) =&gt;</span> &#123;</span><br><span class="line">  entries.forEach(<span class="function">(<span class="params">entry</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// entry의 target으로 DOM에 접근합니다.</span></span><br><span class="line">    <span class="keyword">const</span> $target = entry.target;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 화면에 노출 상태에 따라 해당 엘리먼트의 class를 컨트롤 합니다.</span></span><br><span class="line">    <span class="keyword">if</span> (entry.isIntersecting) &#123;</span><br><span class="line">      $target.classList.add(<span class="string">"screening"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      $target.classList.remove(<span class="string">"screening"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 옵저버할 대상 DOM을 선택하여 관찰을 시작합니다.</span></span><br><span class="line"><span class="keyword">const</span> $items = <span class="built_in">document</span>.querySelectorAll(<span class="string">"li"</span>);</span><br><span class="line">$items.forEach(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">  io.observe(item);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 특정 요소만 옵저버를 해제합니다.</span></span><br><span class="line"><span class="comment">// io.unobserve(targetElement);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 옵저버 전체를 해제합니다.</span></span><br><span class="line"><span class="comment">// io.disconnect();</span></span><br></pre></td></tr></table></figure>
+<p>사용해보면 생각보다 간단한 인터페이스라 금방 실무에 다양하게 활용하실 수 있습니다.<br>아래 참고할만한 NPM 모듈이 있으니 복잡하지 않은 UI는 직접 구현해 보는 것을 추천합니다 :)</p>
+<h2 id="브라우저-지원-현황"><a href="#브라우저-지원-현황" class="headerlink" title="브라우저 지원 현황"></a>브라우저 지원 현황</h2><p><a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill" target="_blank" rel="noopener">Polyfill</a>을 사용하여 IE와 더 많은 하위 브라우저들도 지원할 수 있습니다.<br><img src="./browser-compatibility.png" alt="Browser compatibility"></p>
+<h2 id="참고"><a href="#참고" class="headerlink" title="참고"></a>참고</h2><ul>
+<li><a href="https://developer.mozilla.org/ko/docs/Web/API/IntersectionObserver/IntersectionObserver" target="_blank" rel="noopener">IntersectionObserver MDN</a></li>
+<li><a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill" target="_blank" rel="noopener">IntersectionObserver Polyfill</a></li>
+<li><a href="https://www.npmjs.com/package/react-intersection-observer" target="_blank" rel="noopener">react-intersection-observer</a></li>
+<li><a href="https://github.com/joshwnj/react-visibility-sensor" target="_blank" rel="noopener">react-visibility-sensor</a></li>
+<li><a href="https://www.npmjs.com/package/react-in-viewport" target="_blank" rel="noopener">react-in-viewport</a></li>
+</ul>
+<h2 id="작성자"><a href="#작성자" class="headerlink" title="작성자"></a>작성자</h2><p><img src="https://avatars2.githubusercontent.com/u/1393664?s=200&v=4" width="100" align="left" style="margin-right: 10px"></p>
+<p><strong>codeJS 🐘</strong><br><a href="https://github.com/dodortus" target="_blank" rel="noopener">https://github.com/dodortus</a><br><code>simple is best</code></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IntersectionObserver/" rel="tag"># IntersectionObserver</a>
+          
+            <a href="/tags/LasyLoading/" rel="tag"># LasyLoading</a>
+          
+            <a href="/tags/codeJS/" rel="tag"># codeJS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/pixeless_css_layout/" rel="next" title="픽셀 없는(pixeless) CSS 레이아웃">
+                <i class="fa fa-chevron-left"></i> 픽셀 없는(pixeless) CSS 레이아웃
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/posts/3rule_for_date_handling/" rel="prev" title="웹프론트엔드 개발 시, 지키면 좋은 3가지 규칙">
+                웹프론트엔드 개발 시, 지키면 좋은 3가지 규칙 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            목차
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            흝어보기
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/logo/favicon-96x96.png" alt="cross-code">
+            
+              <p class="site-author-name" itemprop="name">cross-code</p>
+              <div class="site-description motion-element" itemprop="description">프론트엔드 개발을 좋아하는 사람들의 공동 블로그</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">포스트</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">태그</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IntersectionObserver-API란"><span class="nav-text">IntersectionObserver API란</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#어떻게-활용하면-좋을까요"><span class="nav-text">어떻게 활용하면 좋을까요?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#주요-API-알아보기"><span class="nav-text">주요 API 알아보기</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#구문"><span class="nav-text">구문</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#메서드"><span class="nav-text">메서드</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#옵션-속성"><span class="nav-text">옵션 속성</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#간단한-예제로-동작-원리-알아보기"><span class="nav-text">간단한 예제로 동작 원리 알아보기</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#브라우저-지원-현황"><span class="nav-text">브라우저 지원 현황</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#참고"><span class="nav-text">참고</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#작성자"><span class="nav-text">작성자</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cross Code Members</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://yoursite.com/posts/IntersectionObserver/";
+    this.page.identifier = "posts/IntersectionObserver/";
+    this.page.title = '화면에 보이는 요소를 감지하는 IntersectionObserver 알아보기';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://cross-code.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    $(function() {
+      var offsetTop = $('#comments').offset().top - $(window).height();
+      if (offsetTop <= 0) {
+        // load directly when there's no a scrollbar
+        loadComments();
+      } else {
+        $(window).on('scroll.disqus_scroll', function() {
+          // offsetTop may changes because of manually resizing browser window or lazy loading images.
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          var scrollTop = $(window).scrollTop();
+
+          // pre-load comments a bit? (margin or anything else)
+          if (offsetTop - scrollTop < 60) {
+            $(window).off('.disqus_scroll');
+            loadComments();
+          }
+        });
+      }
+    });
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
